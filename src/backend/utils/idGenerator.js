@@ -1,23 +1,44 @@
 const counters = {};
 
-export function generateId(prefix) {
-  if (!prefix) {
+function normalizePrefix(prefix) {
+  if (!prefix || typeof prefix !== "string") {
+    throw new Error("Ungültiger Prefix");
+  }
+
+  const cleanPrefix = prefix.trim().toUpperCase();
+
+  if (!cleanPrefix) {
     throw new Error("Prefix fehlt");
   }
 
-  if (!counters[prefix]) {
-    counters[prefix] = 1;
+  if (!/^[A-Z0-9_]+$/.test(cleanPrefix)) {
+    throw new Error("Prefix darf nur A-Z, 0-9 und _ enthalten");
   }
 
-  const id = `${prefix}-${String(counters[prefix]).padStart(3, "0")}`;
+  return cleanPrefix;
+}
 
-  counters[prefix]++;
+export function generateId(prefix) {
+  const cleanPrefix = normalizePrefix(prefix);
+
+  if (!counters[cleanPrefix]) {
+    counters[cleanPrefix] = 1;
+  }
+
+  const id = `${cleanPrefix}-${String(counters[cleanPrefix]).padStart(3, "0")}`;
+
+  counters[cleanPrefix]++;
 
   return id;
 }
 
 export function resetIdCounter(prefix) {
-  if (prefix) {
-    counters[prefix] = 1;
-  }
+  const cleanPrefix = normalizePrefix(prefix);
+  counters[cleanPrefix] = 1;
+}
+
+export function resetAllIdCounters() {
+  Object.keys(counters).forEach((key) => {
+    delete counters[key];
+  });
 }
