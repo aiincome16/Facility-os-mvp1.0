@@ -123,6 +123,9 @@ loginBtn?.addEventListener(
 
     message.style.color =
       "green";
+    setTimeout(() => {
+  renderDashboard(result.user);
+}, 500);
 
     console.log(
       "Eingeloggt:",
@@ -130,3 +133,65 @@ loginBtn?.addEventListener(
     );
   }
 );
+function renderDashboard(user) {
+  document.body.innerHTML = `
+    <main class="app">
+      <section class="card">
+        <h1>Facility-OS</h1>
+        <p>${user.firstName} ${user.lastName}</p>
+        <p>Rolle: ${user.role}</p>
+
+        <div class="menu">
+          ${getMenuByRole(user.role)}
+        </div>
+
+        <button id="logoutBtn">Logout</button>
+      </section>
+    </main>
+  `;
+
+  document
+    .getElementById("logoutBtn")
+    .addEventListener("click", () => {
+      localStorage.removeItem("facilityUser");
+      location.reload();
+    });
+}
+
+function getMenuByRole(role) {
+  if (role === "ADMIN") {
+    return `
+      <button>Benutzer</button>
+      <button>Objekte</button>
+      <button>System</button>
+    `;
+  }
+
+  if (role === "OBJEKTLEITER") {
+    return `
+      <button>Schichten</button>
+      <button>Tickets</button>
+      <button>Vertretungen</button>
+    `;
+  }
+
+  if (role === "MITARBEITER") {
+    return `
+      <button>QR scannen</button>
+      <button>Meine Schichten</button>
+      <button>Krank melden</button>
+      <button>Urlaub beantragen</button>
+    `;
+  }
+
+  return "";
+}
+
+const savedUser =
+  localStorage.getItem("facilityUser");
+
+if (savedUser) {
+  renderDashboard(
+    JSON.parse(savedUser)
+  );
+}
