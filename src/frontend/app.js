@@ -2,6 +2,8 @@ import { googleSheets } from "../backend/services/googleSheets.js";
 import { login } from "../backend/auth.js";
 import { detectQRType } from "../backend/qr.js";
 
+// TESTDATEN
+
 googleSheets.registerSheet("01_Users", [
   {
     User_ID: "USR-001",
@@ -51,6 +53,8 @@ googleSheets.registerSheet("27_QRCodes", [
   }
 ]);
 
+// TEST LOGS
+
 console.log(
   login(
     "allrountin@gmail.com",
@@ -64,4 +68,65 @@ console.log(
 
 console.log(
   detectQRType("QR-999")
+);
+
+// LOGIN UI
+
+const loginBtn =
+  document.getElementById(
+    "loginBtn"
+  );
+
+loginBtn?.addEventListener(
+  "click",
+  () => {
+    const email =
+      document.getElementById(
+        "email"
+      ).value;
+
+    const password =
+      document.getElementById(
+        "password"
+      ).value;
+
+    const result =
+      login(
+        email,
+        password
+      );
+
+    const message =
+      document.getElementById(
+        "message"
+      );
+
+    if (!result.success) {
+      message.innerText =
+        result.message;
+
+      message.style.color =
+        "red";
+
+      return;
+    }
+
+    localStorage.setItem(
+      "facilityUser",
+      JSON.stringify(
+        result.user
+      )
+    );
+
+    message.innerText =
+      `Login erfolgreich (${result.user.role})`;
+
+    message.style.color =
+      "green";
+
+    console.log(
+      "Eingeloggt:",
+      result.user
+    );
+  }
 );
