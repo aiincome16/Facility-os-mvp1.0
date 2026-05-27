@@ -7,7 +7,7 @@ export function findQRCode(qrId) {
   return googleSheets.findByField(
     "27_QRCodes",
     "QR_ID",
-    String(qrId).trim()
+    qrId
   );
 }
 
@@ -35,4 +35,3 @@ export function detectQRType(qrId) {
     objectId: qr.Objekt_ID,
     qr
   };
-}
