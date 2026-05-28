@@ -2,7 +2,9 @@ import { googleSheets } from "../backend/services/googleSheets.js";
 import { login } from "../backend/auth.js";
 import { detectQRType } from "../backend/qr.js";
 
+// -------------------------
 // TESTDATEN
+// -------------------------
 
 googleSheets.registerSheet("01_Users", [
   {
@@ -53,7 +55,9 @@ googleSheets.registerSheet("27_QRCodes", [
   }
 ]);
 
-// TEST LOGS
+// -------------------------
+// TESTS
+// -------------------------
 
 console.log(
   login(
@@ -70,7 +74,91 @@ console.log(
   detectQRType("QR-999")
 );
 
-// LOGIN UI
+// -------------------------
+// DASHBOARD
+// -------------------------
+
+function renderDashboard(user) {
+  document.body.innerHTML = `
+    <main class="app">
+      <section class="card">
+        <h1>Facility-OS</h1>
+
+        <p>
+          ${user.firstName}
+          ${user.lastName}
+        </p>
+
+        <p>
+          Rolle:
+          ${user.role}
+        </p>
+
+        <div class="menu">
+          ${getMenuByRole(user.role)}
+        </div>
+
+        <button id="logoutBtn">
+          Logout
+        </button>
+      </section>
+    </main>
+  `;
+
+  document
+    .getElementById(
+      "logoutBtn"
+    )
+    ?.addEventListener(
+      "click",
+      () => {
+        localStorage.removeItem(
+          "facilityUser"
+        );
+
+        location.reload();
+      }
+    );
+}
+
+function getMenuByRole(role) {
+  if (role === "ADMIN") {
+    return `
+      <button>Benutzer</button>
+      <button>Objekte</button>
+      <button>System</button>
+    `;
+  }
+
+  if (
+    role ===
+    "OBJEKTLEITER"
+  ) {
+    return `
+      <button>Schichten</button>
+      <button>Tickets</button>
+      <button>Vertretungen</button>
+    `;
+  }
+
+  if (
+    role ===
+    "MITARBEITER"
+  ) {
+    return `
+      <button>QR scannen</button>
+      <button>Meine Schichten</button>
+      <button>Krank melden</button>
+      <button>Urlaub beantragen</button>
+    `;
+  }
+
+  return "";
+}
+
+// -------------------------
+// LOGIN
+// -------------------------
 
 const loginBtn =
   document.getElementById(
@@ -83,12 +171,12 @@ loginBtn?.addEventListener(
     const email =
       document.getElementById(
         "email"
-      ).value;
+      )?.value || "";
 
     const password =
       document.getElementById(
         "password"
-      ).value;
+      )?.value || "";
 
     const result =
       login(
@@ -100,6 +188,8 @@ loginBtn?.addEventListener(
       document.getElementById(
         "message"
       );
+
+    if (!message) return;
 
     if (!result.success) {
       message.innerText =
@@ -123,72 +213,28 @@ loginBtn?.addEventListener(
 
     message.style.color =
       "green";
-    setTimeout(() => {
-  renderDashboard(result.user);
-}, 500);
 
     console.log(
       "Eingeloggt:",
       result.user
     );
+
+    setTimeout(() => {
+      renderDashboard(
+        result.user
+      );
+    }, 500);
   }
 );
-function renderDashboard(user) {
-  document.body.innerHTML = `
-    <main class="app">
-      <section class="card">
-        <h1>Facility-OS</h1>
-        <p>${user.firstName} ${user.lastName}</p>
-        <p>Rolle: ${user.role}</p>
 
-        <div class="menu">
-          ${getMenuByRole(user.role)}
-        </div>
-
-        <button id="logoutBtn">Logout</button>
-      </section>
-    </main>
-  `;
-
-  document
-    .getElementById("logoutBtn")
-    .addEventListener("click", () => {
-      localStorage.removeItem("facilityUser");
-      location.reload();
-    });
-}
-
-function getMenuByRole(role) {
-  if (role === "ADMIN") {
-    return `
-      <button>Benutzer</button>
-      <button>Objekte</button>
-      <button>System</button>
-    `;
-  }
-
-  if (role === "OBJEKTLEITER") {
-    return `
-      <button>Schichten</button>
-      <button>Tickets</button>
-      <button>Vertretungen</button>
-    `;
-  }
-
-  if (role === "MITARBEITER") {
-    return `
-      <button>QR scannen</button>
-      <button>Meine Schichten</button>
-      <button>Krank melden</button>
-      <button>Urlaub beantragen</button>
-    `;
-  }
-
-  return "";
-}
+// -------------------------
+// SESSION RESTORE
+// -------------------------
 
 const savedUser =
-  localStorage.getItem("facilityUser");
+  localStorage.getItem(
+    "facilityUser"
+  );
 
 if (savedUser) {
   renderDashboard(
