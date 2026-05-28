@@ -144,13 +144,24 @@ function getMenuByRole(role) {
   }
 
   if (role === "MITARBEITER") {
-    return `
-      <button>QR scannen</button>
-      <button>Meine Schichten</button>
-      <button>Krank melden</button>
-      <button>Urlaub beantragen</button>
-    `;
-  }
+  return `
+    <button id="qrScanBtn">
+      QR scannen
+    </button>
+
+    <button>
+      Meine Schichten
+    </button>
+
+    <button>
+      Krank melden
+    </button>
+
+    <button>
+      Urlaub beantragen
+    </button>
+  `;
+}
 
   return "";
 }
