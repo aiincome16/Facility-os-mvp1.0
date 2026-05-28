@@ -27,7 +27,51 @@ const users = [
     Aktiv: "JA"
   }
 ];
+const qrCodes = [
+  {
+    QR_ID: "QR-001",
+    Objekt_ID: "OBJ-001",
+    QR_Typ: "OBJEKT_CHECKIN_CHECKOUT",
+    Ziel_Bereich: "SCHICHT",
+    Beschreibung: "Eingang Apotheke Mueller",
+    Aktiv: "JA"
+  },
+  {
+    QR_ID: "QR-002",
+    Objekt_ID: "OBJ-001",
+    QR_Typ: "MATERIAL_LAGER",
+    Ziel_Bereich: "MATERIAL",
+    Beschreibung: "Materialschrank Apotheke Mueller",
+    Aktiv: "JA"
+  }
+];
 
+function detectQRType(qrId) {
+  const qr = qrCodes.find(
+    (item) =>
+      item.QR_ID.toLowerCase() ===
+      qrId.toLowerCase()
+  );
+
+  if (!qr) {
+    return {
+      success: false,
+      message: "QR-Code nicht gefunden"
+    };
+  }
+
+  if (qr.Aktiv !== "JA") {
+    return {
+      success: false,
+      message: "QR-Code deaktiviert"
+    };
+  }
+
+  return {
+    success: true,
+    qr
+  };
+}
 function login(email, password) {
   const user = users.find(
     (u) =>
