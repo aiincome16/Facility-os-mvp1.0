@@ -171,7 +171,42 @@ const savedUser = localStorage.getItem("facilityUser");
 if (savedUser) {
   renderDashboard(JSON.parse(savedUser));
 }
+const qrBtn =
+  document.getElementById(
+    "qrScanBtn"
+  );
 
+qrBtn?.addEventListener(
+  "click",
+  () => {
+    const qrCode =
+      prompt(
+        "QR-Code eingeben"
+      );
+
+    if (!qrCode) return;
+
+    const result =
+      detectQRType(
+        qrCode
+      );
+
+    if (!result.success) {
+      alert(
+        result.message
+      );
+      return;
+    }
+
+    alert(
+      `QR erkannt:
+${result.qr.Beschreibung}
+
+Typ:
+${result.qr.QR_Typ}`
+    );
+  }
+);
 const loginBtn = document.getElementById("loginBtn");
 
 loginBtn?.addEventListener("click", () => {
