@@ -154,7 +154,53 @@ function renderDashboard(user) {
   });
 
   const qrBtn = document.getElementById("qrScanBtn");
+const myShiftBtn =
+  document.getElementById(
+    "myShiftBtn"
+  );
 
+myShiftBtn?.addEventListener(
+  "click",
+  () => {
+    const myShifts =
+      shifts.filter(
+        (shift) =>
+          shift.Mitarbeiter_ID ===
+          user.userId
+      );
+
+    if (
+      !myShifts.length
+    ) {
+      alert(
+        "Keine Schichten vorhanden"
+      );
+      return;
+    }
+
+    const text =
+      myShifts
+        .map(
+          (shift) =>
+            `
+Objekt:
+${shift.Objekt_Name}
+
+Status:
+${shift.Status}
+
+Check-In:
+${shift.Checkin_Zeit || "-"}
+
+Check-Out:
+${shift.Checkout_Zeit || "-"}
+`
+        )
+        .join("\n────────\n");
+
+    alert(text);
+  }
+);
   qrBtn?.addEventListener("click", () => {
     const qrCode = prompt("QR-Code eingeben");
 
