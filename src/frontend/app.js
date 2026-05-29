@@ -175,6 +175,9 @@ function renderDashboard(user) {
 document.getElementById("sickBtn")?.addEventListener("click", () => {
   reportSick(user);
 });
+  document.getElementById("vacationBtn")?.addEventListener("click", () => {
+  requestVacation(user);
+});
   document.getElementById("qrScanBtn")?.addEventListener("click", () => {
     handleQRScan(user);
   });
@@ -350,6 +353,43 @@ Grund:
 ${reason}`
   );
 }
+function requestVacation(user) {
+  const fromDate =
+    prompt(
+      "Urlaub von (TT.MM.JJJJ)"
+    );
+
+  if (!fromDate) return;
+
+  const toDate =
+    prompt(
+      "Urlaub bis (TT.MM.JJJJ)"
+    );
+
+  if (!toDate) return;
+
+  const reason =
+    prompt(
+      "Grund (optional)"
+    ) || "-";
+
+  alert(
+    `Urlaubsantrag gespeichert
+
+Mitarbeiter:
+${user.firstName}
+${user.lastName}
+
+Von:
+${fromDate}
+
+Bis:
+${toDate}
+
+Grund:
+${reason}`
+  );
+}
 function getMenuByRole(role) {
   if (role === "ADMIN") {
     return `
@@ -374,7 +414,9 @@ function getMenuByRole(role) {
       <button id="sickBtn">
   Krank melden
 </button>
-      <button>Urlaub beantragen</button>
+      <button id="vacationBtn">
+  Urlaub beantragen
+</button>
     `;
   }
 
