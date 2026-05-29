@@ -158,8 +158,10 @@ function renderDashboard(user) {
         <p>Rolle: ${user.role}</p>
 
         <div class="menu">
-          ${getMenuByRole(user.role)}
-        </div>
+  ${getMenuByRole(user.role)}
+</div>
+
+<div id="qrReader"></div>
 
         <button id="logoutBtn">Logout</button>
       </section>
