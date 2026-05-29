@@ -27,6 +27,7 @@ const users = [
     Aktiv: "JA"
   }
 ];
+
 const qrCodes = [
   {
     QR_ID: "QR-001",
@@ -45,6 +46,7 @@ const qrCodes = [
     Aktiv: "JA"
   }
 ];
+
 const shifts = [
   {
     Shift_ID: "SHIFT-001",
@@ -60,14 +62,6 @@ const shifts = [
   }
 ];
 
-function findTodayShift(userId, objectId) {
-  return shifts.find(
-    (shift) =>
-      shift.Mitarbeiter_ID === userId &&
-      shift.Objekt_ID === objectId &&
-      shift.Status !== "ABGESCHLOSSEN"
-  );
-}
 function detectQRType(qrId) {
   const qr = qrCodes.find(
     (item) =>
@@ -94,6 +88,16 @@ function detectQRType(qrId) {
     qr
   };
 }
+
+function findTodayShift(userId, objectId) {
+  return shifts.find(
+    (shift) =>
+      shift.Mitarbeiter_ID === userId &&
+      shift.Objekt_ID === objectId &&
+      shift.Status !== "ABGESCHLOSSEN"
+  );
+}
+
 function login(email, password) {
   const user = users.find(
     (u) =>
@@ -156,18 +160,59 @@ function renderDashboard(user) {
 
     if (!qrCode) return;
 
-    const result = detectQRType(qrCode);
+    const qrResult = detectQRType(qrCode);
 
-    if (!result.success) {
-      alert(result.message);
+    if (!qrResult.success) {
+      alert(qrResult.message);
       return;
     }
 
-    alert(
-      `QR erkannt:\n${result.qr.Beschreibung}\n\nTyp:\n${result.qr.QR_Typ}`
+    if (qrResult.qr.QR_Typ === "MATERIAL_LAGER") {
+      alert(
+        `Materiallager geöffnet:\n${qrResult.qr.Beschreibung}`
+      );
+      return;
+    }
+
+    const shift = findTodayShift(
+      user.userId,
+      qrResult.qr.Objekt_ID
     );
+
+    if (!shift) {
+      alert("Keine passende offene Schicht gefunden");
+      return;
+    }
+
+    const now = new Date().toLocaleTimeString("de-DE", {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+
+    if (!shift.Checkin_Zeit) {
+      shift.Checkin_Zeit = now;
+      shift.Status = "GESTARTET";
+
+      alert(
+        `Schicht gestartet\n\nObjekt:\n${shift.Objekt_Name}\n\nCheck-In:\n${now}`
+      );
+      return;
+    }
+
+    if (!shift.Checkout_Zeit) {
+      shift.Checkout_Zeit = now;
+      shift.Status = "ABGESCHLOSSEN";
+
+      alert(
+        `Schicht beendet\n\nObjekt:\n${shift.Objekt_Name}\n\nCheck-Out:\n${now}`
+      );
+      return;
+    }
+
+    alert("Schicht bereits abgeschlossen");
   });
 }
+
 function getMenuByRole(role) {
   if (role === "ADMIN") {
     return `
@@ -186,24 +231,13 @@ function getMenuByRole(role) {
   }
 
   if (role === "MITARBEITER") {
-  return `
-    <button id="qrScanBtn">
-      QR scannen
-    </button>
-
-    <button>
-      Meine Schichten
-    </button>
-
-    <button>
-      Krank melden
-    </button>
-
-    <button>
-      Urlaub beantragen
-    </button>
-  `;
-}
+    return `
+      <button id="qrScanBtn">QR scannen</button>
+      <button>Meine Schichten</button>
+      <button>Krank melden</button>
+      <button>Urlaub beantragen</button>
+    `;
+  }
 
   return "";
 }
@@ -213,34 +247,7 @@ const savedUser = localStorage.getItem("facilityUser");
 if (savedUser) {
   renderDashboard(JSON.parse(savedUser));
 }
-const qrBtn =
-  document.getElementById(
-    "qrScanBtn"
-  );
 
-const shifts = [
-  {
-    Shift_ID: "SHIFT-001",
-    Mitarbeiter_ID: "USR-002",
-    Objekt_ID: "OBJ-001",
-    Objekt_Name: "Apotheke Mueller",
-    Datum: "2026-05-29",
-    Startzeit: "07:00",
-    Endzeit: "08:30",
-    Status: "GEPLANT",
-    Checkin_Zeit: null,
-    Checkout_Zeit: null
-  }
-];
-
-function findTodayShift(userId, objectId) {
-  return shifts.find(
-    (shift) =>
-      shift.Mitarbeiter_ID === userId &&
-      shift.Objekt_ID === objectId &&
-      shift.Status !== "ABGESCHLOSSEN"
-  );
-}
 const loginBtn = document.getElementById("loginBtn");
 
 loginBtn?.addEventListener("click", () => {
