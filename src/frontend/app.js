@@ -183,57 +183,122 @@ function renderDashboard(user) {
 }
 
 function handleQRScan(user) {
-  const qrCode = prompt("QR-Code eingeben");
-
-  if (!qrCode) return;
-
-  const qrResult = detectQRType(qrCode);
-
-  if (!qrResult.success) {
-    alert(qrResult.message);
-    return;
-  }
-
-  if (qrResult.qr.QR_Typ === "MATERIAL_LAGER") {
-    alert(`Materiallager geöffnet:\n${qrResult.qr.Beschreibung}`);
-    return;
-  }
-
-  const shift = findOpenShift(user.userId, qrResult.qr.Objekt_ID);
-
-  if (!shift) {
-    alert("Keine passende offene Schicht gefunden");
-    return;
-  }
-
-  const now = new Date().toLocaleTimeString("de-DE", {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-
-  if (!shift.Checkin_Zeit) {
-    shift.Checkin_Zeit = now;
-    shift.Status = "GESTARTET";
-    saveShifts();
-
-    alert(
-      `Schicht gestartet\n\nObjekt:\n${shift.Objekt_Name}\n\nCheck-In:\n${now}`
+  const reader =
+    document.getElementById(
+      "qrReader"
     );
-    return;
-  }
 
-  if (!shift.Checkout_Zeit) {
-    shift.Checkout_Zeit = now;
-    shift.Status = "ABGESCHLOSSEN";
-    saveShifts();
+  reader.style.display =
+    "block";
 
-    alert(
-      `Schicht beendet\n\nObjekt:\n${shift.Objekt_Name}\n\nCheck-Out:\n${now}`
+  const html5QrCode =
+    new Html5Qrcode(
+      "qrReader"
     );
-    return;
-  }
 
-  alert("Schicht bereits abgeschlossen");
+  html5QrCode.start(
+    {
+      facingMode:
+        "environment"
+    },
+    {
+      fps: 10,
+      qrbox: 250
+    },
+    (decodedText) => {
+      html5QrCode.stop();
+
+      reader.style.display =
+        "none";
+
+      const qrResult =
+        detectQRType(
+          decodedText
+        );
+
+      if (
+        !qrResult.success
+      ) {
+        alert(
+          qrResult.message
+        );
+        return;
+      }
+
+      const shift =
+        findOpenShift(
+          user.userId,
+          qrResult.qr.Objekt_ID
+        );
+
+      if (!shift) {
+        alert(
+          "Keine passende offene Schicht gefunden"
+        );
+        return;
+      }
+
+      const now =
+        new Date()
+          .toLocaleTimeString(
+            "de-DE",
+            {
+              hour:
+                "2-digit",
+              minute:
+                "2-digit"
+            }
+          );
+
+      if (
+        !shift.Checkin_Zeit
+      ) {
+        shift.Checkin_Zeit =
+          now;
+
+        shift.Status =
+          "GESTARTET";
+
+        saveShifts();
+
+        alert(
+          `Schicht gestartet
+
+${shift.Objekt_Name}
+
+${now}`
+        );
+
+        return;
+      }
+
+      if (
+        !shift.Checkout_Zeit
+      ) {
+        shift.Checkout_Zeit =
+          now;
+
+        shift.Status =
+          "ABGESCHLOSSEN";
+
+        saveShifts();
+
+        alert(
+          `Schicht beendet
+
+${shift.Objekt_Name}
+
+${now}`
+        );
+
+        return;
+      }
+
+      alert(
+        "Schicht bereits abgeschlossen"
+      );
+    }
+  );
 }
 
 function showMyShifts(user) {
