@@ -120,12 +120,32 @@ function renderDashboard(user) {
     </main>
   `;
 
-  document.getElementById("logoutBtn").addEventListener("click", () => {
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  logoutBtn?.addEventListener("click", () => {
     localStorage.removeItem("facilityUser");
     location.reload();
   });
-}
 
+  const qrBtn = document.getElementById("qrScanBtn");
+
+  qrBtn?.addEventListener("click", () => {
+    const qrCode = prompt("QR-Code eingeben");
+
+    if (!qrCode) return;
+
+    const result = detectQRType(qrCode);
+
+    if (!result.success) {
+      alert(result.message);
+      return;
+    }
+
+    alert(
+      `QR erkannt:\n${result.qr.Beschreibung}\n\nTyp:\n${result.qr.QR_Typ}`
+    );
+  });
+}
 function getMenuByRole(role) {
   if (role === "ADMIN") {
     return `
