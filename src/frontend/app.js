@@ -106,15 +106,24 @@ function login(email, password) {
   );
 
   if (!user) {
-    return { success: false, message: "Benutzer nicht gefunden" };
+    return {
+      success: false,
+      message: "Benutzer nicht gefunden"
+    };
   }
 
   if (user.Aktiv !== "JA") {
-    return { success: false, message: "Benutzer deaktiviert" };
+    return {
+      success: false,
+      message: "Benutzer deaktiviert"
+    };
   }
 
   if (user.Passwort !== password) {
-    return { success: false, message: "Falsches Passwort" };
+    return {
+      success: false,
+      message: "Falsches Passwort"
+    };
   }
 
   return {
@@ -146,117 +155,90 @@ function renderDashboard(user) {
     </main>
   `;
 
-  const logoutBtn = document.getElementById("logoutBtn");
-
-  logoutBtn?.addEventListener("click", () => {
+  document.getElementById("logoutBtn")?.addEventListener("click", () => {
     localStorage.removeItem("facilityUser");
     location.reload();
   });
 
-  const qrBtn = document.getElementById("qrScanBtn");
-const myShiftBtn =
-  document.getElementById(
-    "myShiftBtn"
+  document.getElementById("qrScanBtn")?.addEventListener("click", () => {
+    handleQRScan(user);
+  });
+
+  document.getElementById("myShiftBtn")?.addEventListener("click", () => {
+    showMyShifts(user);
+  });
+}
+
+function handleQRScan(user) {
+  const qrCode = prompt("QR-Code eingeben");
+
+  if (!qrCode) return;
+
+  const qrResult = detectQRType(qrCode);
+
+  if (!qrResult.success) {
+    alert(qrResult.message);
+    return;
+  }
+
+  if (qrResult.qr.QR_Typ === "MATERIAL_LAGER") {
+    alert(`Materiallager geöffnet:\n${qrResult.qr.Beschreibung}`);
+    return;
+  }
+
+  const shift = findTodayShift(user.userId, qrResult.qr.Objekt_ID);
+
+  if (!shift) {
+    alert("Keine passende offene Schicht gefunden");
+    return;
+  }
+
+  const now = new Date().toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+
+  if (!shift.Checkin_Zeit) {
+    shift.Checkin_Zeit = now;
+    shift.Status = "GESTARTET";
+
+    alert(
+      `Schicht gestartet\n\nObjekt:\n${shift.Objekt_Name}\n\nCheck-In:\n${now}`
+    );
+    return;
+  }
+
+  if (!shift.Checkout_Zeit) {
+    shift.Checkout_Zeit = now;
+    shift.Status = "ABGESCHLOSSEN";
+
+    alert(
+      `Schicht beendet\n\nObjekt:\n${shift.Objekt_Name}\n\nCheck-Out:\n${now}`
+    );
+    return;
+  }
+
+  alert("Schicht bereits abgeschlossen");
+}
+
+function showMyShifts(user) {
+  const myShifts = shifts.filter(
+    (shift) => shift.Mitarbeiter_ID === user.userId
   );
 
-myShiftBtn?.addEventListener(
-  "click",
-  () => {
-    const myShifts =
-      shifts.filter(
-        (shift) =>
-          shift.Mitarbeiter_ID ===
-          user.userId
-      );
-
-    if (
-      !myShifts.length
-    ) {
-      alert(
-        "Keine Schichten vorhanden"
-      );
-      return;
-    }
-
-    const text =
-      myShifts
-        .map(
-          (shift) =>
-            `
-Objekt:
-${shift.Objekt_Name}
-
-Status:
-${shift.Status}
-
-Check-In:
-${shift.Checkin_Zeit || "-"}
-
-Check-Out:
-${shift.Checkout_Zeit || "-"}
-`
-        )
-        .join("\n────────\n");
-
-    alert(text);
+  if (!myShifts.length) {
+    alert("Keine Schichten vorhanden");
+    return;
   }
-);
-  qrBtn?.addEventListener("click", () => {
-    const qrCode = prompt("QR-Code eingeben");
 
-    if (!qrCode) return;
+  const text = myShifts
+    .map(
+      (shift) =>
+        `Objekt:\n${shift.Objekt_Name}\n\nStatus:\n${shift.Status}\n\nCheck-In:\n${shift.Checkin_Zeit || "-"}\n\nCheck-Out:\n${shift.Checkout_Zeit || "-"}`
+    )
+    .join("\n\n────────\n\n");
 
-    const qrResult = detectQRType(qrCode);
-
-    if (!qrResult.success) {
-      alert(qrResult.message);
-      return;
-    }
-
-    if (qrResult.qr.QR_Typ === "MATERIAL_LAGER") {
-      alert(
-        `Materiallager geöffnet:\n${qrResult.qr.Beschreibung}`
-      );
-      return;
-    }
-
-    const shift = findTodayShift(
-      user.userId,
-      qrResult.qr.Objekt_ID
-    );
-
-    if (!shift) {
-      alert("Keine passende offene Schicht gefunden");
-      return;
-    }
-
-    const now = new Date().toLocaleTimeString("de-DE", {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-
-    if (!shift.Checkin_Zeit) {
-      shift.Checkin_Zeit = now;
-      shift.Status = "GESTARTET";
-
-      alert(
-        `Schicht gestartet\n\nObjekt:\n${shift.Objekt_Name}\n\nCheck-In:\n${now}`
-      );
-      return;
-    }
-
-    if (!shift.Checkout_Zeit) {
-      shift.Checkout_Zeit = now;
-      shift.Status = "ABGESCHLOSSEN";
-
-      alert(
-        `Schicht beendet\n\nObjekt:\n${shift.Objekt_Name}\n\nCheck-Out:\n${now}`
-      );
-      return;
-    }
-
-    alert("Schicht bereits abgeschlossen");
-  });
+  alert(text);
 }
 
 function getMenuByRole(role) {
@@ -279,7 +261,7 @@ function getMenuByRole(role) {
   if (role === "MITARBEITER") {
     return `
       <button id="qrScanBtn">QR scannen</button>
-      <button>Meine Schichten</button>
+      <button id="myShiftBtn">Meine Schichten</button>
       <button>Krank melden</button>
       <button>Urlaub beantragen</button>
     `;
