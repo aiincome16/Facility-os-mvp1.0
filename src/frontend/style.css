@@ -73,4 +73,10 @@ button:active {
 
 .menu button {
   background: #0f172a;
+}#qrReader {
+  display: none;
+  width: 100%;
+  margin: 16px 0;
+  border-radius: 12px;
+  overflow: hidden;
 }
