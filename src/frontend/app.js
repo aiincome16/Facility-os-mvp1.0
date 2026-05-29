@@ -47,15 +47,8 @@ const qrCodes = [
   }
 ];
 
-let shifts =
-  JSON.parse(localStorage.getItem("facilityShifts")) || [
+const defaultShifts = [
   {
-    function saveShifts() {
-  localStorage.setItem(
-    "facilityShifts",
-    JSON.stringify(shifts)
-  );
-}
     Shift_ID: "SHIFT-001",
     Mitarbeiter_ID: "USR-002",
     Objekt_ID: "OBJ-001",
@@ -68,6 +61,17 @@ let shifts =
     Checkout_Zeit: null
   }
 ];
+
+let shifts =
+  JSON.parse(localStorage.getItem("facilityShifts")) ||
+  defaultShifts;
+
+function saveShifts() {
+  localStorage.setItem(
+    "facilityShifts",
+    JSON.stringify(shifts)
+  );
+}
 
 function detectQRType(qrId) {
   const qr = qrCodes.find(
@@ -96,13 +100,12 @@ function detectQRType(qrId) {
   };
 }
 
-function findTodayShift(userId, objectId) {
+function findOpenShift(userId, objectId) {
   return shifts.find(
     (shift) =>
       shift.Mitarbeiter_ID === userId &&
       shift.Objekt_ID === objectId &&
       shift.Status !== "ABGESCHLOSSEN"
-    saveShifts();
   );
 }
 
@@ -194,7 +197,7 @@ function handleQRScan(user) {
     return;
   }
 
-  const shift = findTodayShift(user.userId, qrResult.qr.Objekt_ID);
+  const shift = findOpenShift(user.userId, qrResult.qr.Objekt_ID);
 
   if (!shift) {
     alert("Keine passende offene Schicht gefunden");
@@ -209,7 +212,8 @@ function handleQRScan(user) {
   if (!shift.Checkin_Zeit) {
     shift.Checkin_Zeit = now;
     shift.Status = "GESTARTET";
-saveShifts();
+    saveShifts();
+
     alert(
       `Schicht gestartet\n\nObjekt:\n${shift.Objekt_Name}\n\nCheck-In:\n${now}`
     );
@@ -219,6 +223,7 @@ saveShifts();
   if (!shift.Checkout_Zeit) {
     shift.Checkout_Zeit = now;
     shift.Status = "ABGESCHLOSSEN";
+    saveShifts();
 
     alert(
       `Schicht beendet\n\nObjekt:\n${shift.Objekt_Name}\n\nCheck-Out:\n${now}`
