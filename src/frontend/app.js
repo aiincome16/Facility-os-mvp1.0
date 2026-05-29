@@ -47,8 +47,15 @@ const qrCodes = [
   }
 ];
 
-const shifts = [
+let shifts =
+  JSON.parse(localStorage.getItem("facilityShifts")) || [
   {
+    function saveShifts() {
+  localStorage.setItem(
+    "facilityShifts",
+    JSON.stringify(shifts)
+  );
+}
     Shift_ID: "SHIFT-001",
     Mitarbeiter_ID: "USR-002",
     Objekt_ID: "OBJ-001",
@@ -95,6 +102,7 @@ function findTodayShift(userId, objectId) {
       shift.Mitarbeiter_ID === userId &&
       shift.Objekt_ID === objectId &&
       shift.Status !== "ABGESCHLOSSEN"
+    saveShifts();
   );
 }
 
@@ -201,7 +209,7 @@ function handleQRScan(user) {
   if (!shift.Checkin_Zeit) {
     shift.Checkin_Zeit = now;
     shift.Status = "GESTARTET";
-
+saveShifts();
     alert(
       `Schicht gestartet\n\nObjekt:\n${shift.Objekt_Name}\n\nCheck-In:\n${now}`
     );
