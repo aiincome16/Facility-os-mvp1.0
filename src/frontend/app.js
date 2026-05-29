@@ -1,96 +1,36 @@
+const BRANDING = {
+  appName: "Facility-OS",
+  subtitle: "Mobile Facility Management",
+  primaryColor: "#2563eb",
+  accentColor: "#22c55e"
+};
+
 const users = [
-  {
-    User_ID: "USR-001",
-    Vorname: "Kristin",
-    Nachname: "Rabener",
-    Rolle: "ADMIN",
-    Email: "allrountin@gmail.com",
-    Passwort: "Test123!",
-    Aktiv: "JA"
-  },
-  {
-    User_ID: "USR-002",
-    Vorname: "Anna",
-    Nachname: "Becker",
-    Rolle: "MITARBEITER",
-    Email: "anna@test.de",
-    Passwort: "Test123!",
-    Aktiv: "JA"
-  },
-  {
-    User_ID: "USR-004",
-    Vorname: "Sarah",
-    Nachname: "Mueller",
-    Rolle: "OBJEKTLEITER",
-    Email: "sarah@test.de",
-    Passwort: "Test123!",
-    Aktiv: "JA"
-  }
+  { User_ID: "USR-001", Vorname: "Kristin", Nachname: "Rabener", Rolle: "ADMIN", Email: "allrountin@gmail.com", Passwort: "Test123!", Aktiv: "JA" },
+  { User_ID: "USR-002", Vorname: "Anna", Nachname: "Becker", Rolle: "MITARBEITER", Email: "anna@test.de", Passwort: "Test123!", Aktiv: "JA" },
+  { User_ID: "USR-004", Vorname: "Sarah", Nachname: "Mueller", Rolle: "OBJEKTLEITER", Email: "sarah@test.de", Passwort: "Test123!", Aktiv: "JA" }
 ];
 
 const qrCodes = [
-  {
-    QR_ID: "QR-001",
-    Objekt_ID: "OBJ-001",
-    QR_Typ: "OBJEKT_CHECKIN_CHECKOUT",
-    Beschreibung: "Eingang Apotheke Mueller",
-    Aktiv: "JA"
-  },
-  {
-    QR_ID: "QR-002",
-    Objekt_ID: "OBJ-001",
-    QR_Typ: "MATERIAL_LAGER",
-    Beschreibung: "Materialschrank Apotheke Mueller",
-    Aktiv: "JA"
-  }
+  { QR_ID: "QR-001", Objekt_ID: "OBJ-001", QR_Typ: "OBJEKT_CHECKIN_CHECKOUT", Beschreibung: "Eingang Apotheke Mueller", Aktiv: "JA" },
+  { QR_ID: "QR-002", Objekt_ID: "OBJ-001", QR_Typ: "MATERIAL_LAGER", Beschreibung: "Materialschrank Apotheke Mueller", Aktiv: "JA" }
 ];
 
 const objects = [
-  {
-    Objekt_ID: "OBJ-001",
-    Name: "Apotheke Mueller",
-    Adresse: "Musterstraße 1, Wimmelburg",
-    Objektleiter_ID: "USR-004"
-  },
-  {
-    Objekt_ID: "OBJ-002",
-    Name: "Praxis Schmidt",
-    Adresse: "Hauptstraße 12, Halle",
-    Objektleiter_ID: "USR-004"
-  }
+  { Objekt_ID: "OBJ-001", Name: "Apotheke Mueller", Adresse: "Musterstraße 1, Wimmelburg" },
+  { Objekt_ID: "OBJ-002", Name: "Praxis Schmidt", Adresse: "Hauptstraße 12, Halle" }
 ];
 
 const defaultShifts = [
-  {
-    Shift_ID: "SHIFT-001",
-    Mitarbeiter_ID: "USR-002",
-    Objekt_ID: "OBJ-001",
-    Objekt_Name: "Apotheke Mueller",
-    Datum: "2026-05-29",
-    Startzeit: "07:00",
-    Endzeit: "08:30",
-    Status: "GEPLANT",
-    Checkin_Zeit: null,
-    Checkout_Zeit: null
-  },
-  {
-    Shift_ID: "SHIFT-002",
-    Mitarbeiter_ID: "USR-002",
-    Objekt_ID: "OBJ-002",
-    Objekt_Name: "Praxis Schmidt",
-    Datum: "2026-05-30",
-    Startzeit: "08:00",
-    Endzeit: "09:30",
-    Status: "GEPLANT",
-    Checkin_Zeit: null,
-    Checkout_Zeit: null
-  }
+  { Shift_ID: "SHIFT-001", Mitarbeiter_ID: "USR-002", Objekt_ID: "OBJ-001", Objekt_Name: "Apotheke Mueller", Datum: "2026-05-29", Startzeit: "07:00", Endzeit: "08:30", Status: "GEPLANT", Checkin_Zeit: null, Checkout_Zeit: null },
+  { Shift_ID: "SHIFT-002", Mitarbeiter_ID: "USR-002", Objekt_ID: "OBJ-002", Objekt_Name: "Praxis Schmidt", Datum: "2026-05-30", Startzeit: "08:00", Endzeit: "09:30", Status: "GEPLANT", Checkin_Zeit: null, Checkout_Zeit: null }
 ];
 
 let shifts = JSON.parse(localStorage.getItem("facilityShifts")) || defaultShifts;
 let sickReports = JSON.parse(localStorage.getItem("facilitySickReports")) || [];
 let vacationRequests = JSON.parse(localStorage.getItem("facilityVacations")) || [];
 let materialReports = JSON.parse(localStorage.getItem("facilityMaterials")) || [];
+let currentScanner = null;
 
 function saveAll() {
   localStorage.setItem("facilityShifts", JSON.stringify(shifts));
@@ -99,37 +39,19 @@ function saveAll() {
   localStorage.setItem("facilityMaterials", JSON.stringify(materialReports));
 }
 
-function appModal(title, body, actions = "") {
+function appModal(title, html, actions = "") {
   document.getElementById("appModal")?.remove();
 
   const modal = document.createElement("div");
   modal.id = "appModal";
-
+  modal.className = "modal-bg";
   modal.innerHTML = `
-    <div style="
-      position: fixed;
-      inset: 0;
-      background: rgba(15,23,42,.55);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      z-index: 9999;
-    ">
-      <div style="
-        background: white;
-        width: 100%;
-        max-width: 430px;
-        border-radius: 22px;
-        padding: 24px;
-        box-shadow: 0 20px 50px rgba(0,0,0,.22);
-      ">
-        <h2 style="margin-bottom: 14px; color:#0f172a;">${title}</h2>
-        <div style="color:#334155; font-size:16px; line-height:1.45;">${body}</div>
-        <div style="margin-top:20px; display:grid; gap:10px;">
-          ${actions}
-          <button onclick="closeModal()">Schließen</button>
-        </div>
+    <div class="modal">
+      <h2>${title}</h2>
+      <div>${html}</div>
+      <div class="menu">
+        ${actions}
+        <button class="light" onclick="closeModal()">Schließen</button>
       </div>
     </div>
   `;
@@ -143,59 +65,69 @@ function closeModal() {
 
 window.closeModal = closeModal;
 
-function inputModal(title, fields, onSubmitName) {
-  const body = fields
-    .map(
-      (field) => `
-        <label style="display:block;margin:12px 0 6px;font-weight:700;">
-          ${field.label}
-        </label>
-        <input
-          id="${field.id}"
-          placeholder="${field.placeholder || ""}"
-          style="
-            width:100%;
-            padding:13px;
-            border:1px solid #dbe2ea;
-            border-radius:12px;
-            font-size:16px;
-          "
-        >
-      `
-    )
-    .join("");
+function renderLogin() {
+  document.getElementById("app").innerHTML = `
+    <main class="app-shell">
+      <section class="card">
+        <div class="brand">
+          <h1>${BRANDING.appName}</h1>
+          <p>${BRANDING.subtitle}</p>
+        </div>
 
-  const actions = `<button onclick="${onSubmitName}()">Speichern</button>`;
-  appModal(title, body, actions);
+        <div class="badge">Mitarbeiter zuerst per QR</div>
+
+        <div class="menu">
+          <button id="quickQRBtn">QR am Objekt scannen</button>
+          <button class="secondary" id="fallbackLoginBtn">Login / Fallback</button>
+        </div>
+
+        <div id="loginForm" style="display:none;">
+          <input id="email" type="email" placeholder="E-Mail" />
+          <input id="password" type="password" placeholder="Passwort" />
+          <button id="loginBtn">Einloggen</button>
+          <p id="message"></p>
+        </div>
+
+        <div id="qrReader"></div>
+      </section>
+    </main>
+  `;
+
+  document.getElementById("fallbackLoginBtn").addEventListener("click", () => {
+    document.getElementById("loginForm").style.display = "block";
+  });
+
+  document.getElementById("quickQRBtn").addEventListener("click", () => {
+    appModal(
+      "QR-Login Demo",
+      "In der echten App erkennt das System Mitarbeiter + Objekt über QR/GPS. Für die Demo bitte als Mitarbeiter einloggen und dann QR scannen."
+    );
+  });
+
+  document.getElementById("loginBtn").addEventListener("click", handleLogin);
+}
+
+function handleLogin() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const result = login(email, password);
+
+  if (!result.success) {
+    document.getElementById("message").innerText = result.message;
+    document.getElementById("message").style.color = "red";
+    return;
+  }
+
+  localStorage.setItem("facilityUser", JSON.stringify(result.user));
+  renderDashboard(result.user);
 }
 
 function login(email, password) {
-  const user = users.find(
-    (user) =>
-      user.Email.toLowerCase().trim() ===
-      String(email).toLowerCase().trim()
-  );
+  const user = users.find(u => u.Email.toLowerCase().trim() === String(email).toLowerCase().trim());
 
-  if (!user) {
-    return {
-      success: false,
-      message: "Benutzer nicht gefunden"
-    };
-  }
-
-  if (user.Aktiv !== "JA") {
-    return {
-      success: false,
-      message: "Benutzer deaktiviert"
-    };
-  }
-
-  if (user.Passwort !== password) {
-    return {
-      success: false,
-      message: "Falsches Passwort"
-    };
-  }
+  if (!user) return { success: false, message: "Benutzer nicht gefunden" };
+  if (user.Aktiv !== "JA") return { success: false, message: "Benutzer deaktiviert" };
+  if (user.Passwort !== password) return { success: false, message: "Falsches Passwort" };
 
   return {
     success: true,
@@ -210,12 +142,15 @@ function login(email, password) {
 }
 
 function renderDashboard(user) {
-  document.body.innerHTML = `
-    <main class="app">
+  document.getElementById("app").innerHTML = `
+    <main class="app-shell">
       <section class="card">
-        <h1>Facility-OS</h1>
-        <p>${user.firstName} ${user.lastName}</p>
-        <p>Rolle: ${user.role}</p>
+        <div class="brand">
+          <h1>${BRANDING.appName}</h1>
+          <p>${user.firstName} ${user.lastName}</p>
+        </div>
+
+        <div class="badge">${user.role}</div>
 
         <div class="menu">
           ${getMenuByRole(user.role)}
@@ -223,8 +158,8 @@ function renderDashboard(user) {
 
         <div id="qrReader"></div>
 
-        <button id="resetBtn">Demo zurücksetzen</button>
-        <button id="logoutBtn">Logout</button>
+        <button class="light" id="resetBtn">Demo zurücksetzen</button>
+        <button class="secondary" id="logoutBtn">Logout</button>
       </section>
     </main>
   `;
@@ -239,6 +174,8 @@ function getMenuByRole(role) {
       <button id="myShiftBtn">Meine Schichten</button>
       <button id="sickBtn">Krank melden</button>
       <button id="vacationBtn">Urlaub beantragen</button>
+      <button id="materialBtn">Material melden</button>
+      <button id="helpBtn">Hilfe</button>
     `;
   }
 
@@ -269,7 +206,7 @@ function getMenuByRole(role) {
 function bindEvents(user) {
   document.getElementById("logoutBtn")?.addEventListener("click", () => {
     localStorage.removeItem("facilityUser");
-    location.reload();
+    renderLogin();
   });
 
   document.getElementById("resetBtn")?.addEventListener("click", () => {
@@ -277,140 +214,91 @@ function bindEvents(user) {
     localStorage.removeItem("facilitySickReports");
     localStorage.removeItem("facilityVacations");
     localStorage.removeItem("facilityMaterials");
-
     appModal("Demo zurückgesetzt", "Die lokalen Demo-Daten wurden gelöscht.");
-
-    setTimeout(() => {
-      location.reload();
-    }, 900);
+    setTimeout(() => location.reload(), 900);
   });
 
-  document.getElementById("qrScanBtn")?.addEventListener("click", () => {
-    handleQRScan(user);
-  });
+  document.getElementById("qrScanBtn")?.addEventListener("click", () => handleQRScan(user));
+  document.getElementById("myShiftBtn")?.addEventListener("click", () => showMyShifts(user));
+  document.getElementById("sickBtn")?.addEventListener("click", () => openSickForm(user));
+  document.getElementById("vacationBtn")?.addEventListener("click", () => openVacationForm(user));
+  document.getElementById("materialBtn")?.addEventListener("click", () => openMaterialForm(user));
+  document.getElementById("helpBtn")?.addEventListener("click", () => appModal("Hilfe", "Bei QR-Problemen Fallback-Login nutzen. Objektleiter wird später automatisch informiert."));
 
-  document.getElementById("myShiftBtn")?.addEventListener("click", () => {
-    showMyShifts(user);
-  });
-
-  document.getElementById("sickBtn")?.addEventListener("click", () => {
-    openSickForm(user);
-  });
-
-  document.getElementById("vacationBtn")?.addEventListener("click", () => {
-    openVacationForm(user);
-  });
-
-  document.getElementById("managerShiftsBtn")?.addEventListener("click", () => {
-    showAllShifts();
-  });
-
-  document.getElementById("managerSickBtn")?.addEventListener("click", () => {
-    showSickReports();
-  });
-
-  document.getElementById("managerVacationBtn")?.addEventListener("click", () => {
-    showVacationRequests();
-  });
-
-  document.getElementById("managerMaterialBtn")?.addEventListener("click", () => {
-    showMaterialReports();
-  });
-
-  document.getElementById("objectsBtn")?.addEventListener("click", () => {
-    showObjects();
-  });
-
-  document.getElementById("usersBtn")?.addEventListener("click", () => {
-    showUsers();
-  });
+  document.getElementById("managerShiftsBtn")?.addEventListener("click", showAllShifts);
+  document.getElementById("managerSickBtn")?.addEventListener("click", showSickReports);
+  document.getElementById("managerVacationBtn")?.addEventListener("click", showVacationRequests);
+  document.getElementById("managerMaterialBtn")?.addEventListener("click", showMaterialReports);
+  document.getElementById("objectsBtn")?.addEventListener("click", showObjects);
+  document.getElementById("usersBtn")?.addEventListener("click", showUsers);
 }
 
 function detectQRType(qrId) {
-  const qr = qrCodes.find(
-    (item) =>
-      item.QR_ID.toLowerCase() ===
-      String(qrId).trim().toLowerCase()
-  );
+  const qr = qrCodes.find(q => q.QR_ID.toLowerCase() === String(qrId).trim().toLowerCase());
 
-  if (!qr) {
-    return {
-      success: false,
-      message: "QR-Code nicht gefunden"
-    };
-  }
+  if (!qr) return { success: false, message: "QR-Code nicht gefunden" };
+  if (qr.Aktiv !== "JA") return { success: false, message: "QR-Code deaktiviert" };
 
-  if (qr.Aktiv !== "JA") {
-    return {
-      success: false,
-      message: "QR-Code deaktiviert"
-    };
-  }
-
-  return {
-    success: true,
-    qr
-  };
-}
-
-function findOpenShift(userId, objectId) {
-  return shifts.find(
-    (shift) =>
-      shift.Mitarbeiter_ID === userId &&
-      shift.Objekt_ID === objectId &&
-      shift.Status !== "ABGESCHLOSSEN"
-  );
+  return { success: true, qr };
 }
 
 function handleQRScan(user) {
   const reader = document.getElementById("qrReader");
   reader.style.display = "block";
 
+  const backBtn = document.createElement("button");
+  backBtn.innerText = "Zurück";
+  backBtn.className = "light";
+  reader.before(backBtn);
+
+  backBtn.onclick = () => {
+    if (currentScanner) {
+      currentScanner.stop().catch(() => {});
+    }
+
+    currentScanner = null;
+    reader.style.display = "none";
+    backBtn.remove();
+  };
+
   if (typeof Html5Qrcode === "undefined") {
     reader.style.display = "none";
-
-    inputModal(
-      "QR manuell eingeben",
-      [{ id: "manualQr", label: "QR-Code", placeholder: "QR-001" }],
-      "submitManualQr"
-    );
-
-    window.submitManualQr = function () {
-      const value = document.getElementById("manualQr").value;
-      closeModal();
-      processQR(value, user);
-    };
-
+    backBtn.remove();
+    manualQr(user);
     return;
   }
 
-  const html5QrCode = new Html5Qrcode("qrReader");
+  currentScanner = new Html5Qrcode("qrReader");
 
-  html5QrCode
-    .start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: 250 },
-      (decodedText) => {
-        html5QrCode.stop();
-        reader.style.display = "none";
-        processQR(decodedText, user);
-      }
-    )
-    .catch(() => {
+  currentScanner.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 250 },
+    (decodedText) => {
+      currentScanner.stop().catch(() => {});
+      currentScanner = null;
       reader.style.display = "none";
+      backBtn.remove();
+      processQR(decodedText, user);
+    }
+  ).catch(() => {
+    reader.style.display = "none";
+    backBtn.remove();
+    manualQr(user);
+  });
+}
 
-      inputModal(
-        "QR manuell eingeben",
-        [{ id: "manualQr", label: "QR-Code", placeholder: "QR-001" }],
-        "submitManualQr"
-      );
+function manualQr(user) {
+  appModal(
+    "QR manuell eingeben",
+    `<input id="manualQr" placeholder="QR-001">`,
+    `<button onclick="submitManualQr()">Prüfen</button>`
+  );
 
-      window.submitManualQr = function () {
-        const value = document.getElementById("manualQr").value;
-        closeModal();
-        processQR(value, user);
-      };
-    });
+  window.submitManualQr = function () {
+    const value = document.getElementById("manualQr").value;
+    closeModal();
+    processQR(value, user);
+  };
 }
 
 function processQR(qrText, user) {
@@ -422,54 +310,18 @@ function processQR(qrText, user) {
   }
 
   if (result.qr.QR_Typ === "MATERIAL_LAGER") {
-    inputModal(
-      "Materialmeldung",
-      [
-        {
-          id: "materialName",
-          label: "Welches Material fehlt?",
-          placeholder: "z. B. Toilettenpapier"
-        }
-      ],
-      "submitMaterialReport"
-    );
-
-    window.submitMaterialReport = function () {
-      const material = document.getElementById("materialName").value.trim();
-
-      if (!material) {
-        return;
-      }
-
-      materialReports.push({
-        id: `MATREP-${Date.now()}`,
-        userId: user.userId,
-        objectId: result.qr.Objekt_ID,
-        objectName: result.qr.Beschreibung,
-        material,
-        createdAt: new Date().toLocaleString("de-DE"),
-        status: "NEU"
-      });
-
-      saveAll();
-      closeModal();
-
-      appModal(
-        "Materialmeldung gespeichert",
-        `Material:<br><b>${material}</b><br><br>Status:<br><b>NEU</b>`
-      );
-    };
-
+    openMaterialForm(user, result.qr.Beschreibung);
     return;
   }
 
-  const shift = findOpenShift(user.userId, result.qr.Objekt_ID);
+  const shift = shifts.find(s =>
+    s.Mitarbeiter_ID === user.userId &&
+    s.Objekt_ID === result.qr.Objekt_ID &&
+    s.Status !== "ABGESCHLOSSEN"
+  );
 
   if (!shift) {
-    appModal(
-      "Keine Schicht gefunden",
-      "Für diesen QR-Code wurde keine offene Schicht gefunden."
-    );
+    appModal("Keine Schicht gefunden", "Für diesen QR-Code wurde keine offene Schicht gefunden.");
     return;
   }
 
@@ -482,12 +334,7 @@ function processQR(qrText, user) {
     shift.Checkin_Zeit = now;
     shift.Status = "GESTARTET";
     saveAll();
-
-    appModal(
-      "Schicht gestartet",
-      `Objekt:<br><b>${shift.Objekt_Name}</b><br><br>Check-In:<br><b>${now}</b>`
-    );
-
+    appModal("Schicht gestartet", `Objekt:<br><b>${shift.Objekt_Name}</b><br><br>Check-In:<br><b>${now}</b>`);
     return;
   }
 
@@ -495,232 +342,187 @@ function processQR(qrText, user) {
     shift.Checkout_Zeit = now;
     shift.Status = "ABGESCHLOSSEN";
     saveAll();
-
-    appModal(
-      "Schicht beendet",
-      `Objekt:<br><b>${shift.Objekt_Name}</b><br><br>Check-Out:<br><b>${now}</b>`
-    );
-
-    return;
+    appModal("Schicht beendet", `Objekt:<br><b>${shift.Objekt_Name}</b><br><br>Check-Out:<br><b>${now}</b>`);
   }
-
-  appModal("Info", "Schicht bereits abgeschlossen.");
 }
 
 function showMyShifts(user) {
-  const myShifts = shifts.filter(
-    (shift) => shift.Mitarbeiter_ID === user.userId
-  );
-
-  if (!myShifts.length) {
-    appModal("Meine Schichten", "Keine Schichten vorhanden.");
-    return;
-  }
-
-  appModal("Meine Schichten", myShifts.map(formatShift).join("<hr>"));
+  const myShifts = shifts.filter(s => s.Mitarbeiter_ID === user.userId);
+  appModal("Meine Schichten", myShifts.map(formatShift).join("<hr>") || "Keine Schichten vorhanden.");
 }
 
 function showAllShifts() {
-  if (!shifts.length) {
-    appModal("Schichten", "Keine Schichten vorhanden.");
-    return;
-  }
-
-  appModal("Schichten", shifts.map(formatShift).join("<hr>"));
+  appModal("Schichten", shifts.map(formatShift).join("<hr>") || "Keine Schichten vorhanden.");
 }
 
-function formatShift(shift) {
-  const employee = users.find(
-    (user) => user.User_ID === shift.Mitarbeiter_ID
-  );
+function formatShift(s) {
+  const employee = users.find(u => u.User_ID === s.Mitarbeiter_ID);
 
   return `
     Mitarbeiter:<br><b>${employee?.Vorname || "-"} ${employee?.Nachname || ""}</b><br><br>
-    Objekt:<br><b>${shift.Objekt_Name}</b><br><br>
-    Datum:<br>${shift.Datum}<br><br>
-    Status:<br><b>${shift.Status}</b><br><br>
-    Check-In:<br>${shift.Checkin_Zeit || "-"}<br>
-    Check-Out:<br>${shift.Checkout_Zeit || "-"}
+    Objekt:<br><b>${s.Objekt_Name}</b><br><br>
+    Datum:<br>${s.Datum}<br><br>
+    Status:<br><b>${s.Status}</b><br><br>
+    Check-In:<br>${s.Checkin_Zeit || "-"}<br>
+    Check-Out:<br>${s.Checkout_Zeit || "-"}
   `;
 }
 
 function openSickForm(user) {
-  window.currentUserForForm = user;
-
-  inputModal(
-    "Krankmeldung",
-    [
-      {
-        id: "sickReason",
-        label: "Grund",
-        placeholder: "z. B. krank / Arzttermin"
-      }
-    ],
-    "submitSickReport"
-  );
-}
-
-window.submitSickReport = function () {
-  const user = window.currentUserForForm;
-  const reason = document.getElementById("sickReason").value.trim();
-
-  if (!reason) {
-    return;
-  }
-
-  sickReports.push({
-    id: `SICK-${Date.now()}`,
-    userId: user.userId,
-    name: `${user.firstName} ${user.lastName}`,
-    date: new Date().toLocaleDateString("de-DE"),
-    reason,
-    status: "GEMELDET"
-  });
-
-  saveAll();
-  closeModal();
-
   appModal(
-    "Krankmeldung gespeichert",
-    `Status:<br><b>GEMELDET</b><br><br>Grund:<br>${reason}`
+    "Krank melden",
+    `
+      <label>Von</label>
+      <input id="sickFrom" type="date">
+
+      <label>Bis</label>
+      <input id="sickTo" type="date">
+
+      <label>Grund / Hinweis</label>
+      <textarea id="sickReason" placeholder="z. B. krank / Arzttermin"></textarea>
+    `,
+    `<button onclick="submitSickReport()">Melden</button>`
   );
-};
+
+  window.submitSickReport = function () {
+    const from = document.getElementById("sickFrom").value;
+    const to = document.getElementById("sickTo").value;
+    const reason = document.getElementById("sickReason").value.trim();
+
+    if (!from || !to) return appModal("Fehlende Angaben", "Bitte Zeitraum ausfüllen.");
+
+    sickReports.push({
+      id: `SICK-${Date.now()}`,
+      userId: user.userId,
+      name: `${user.firstName} ${user.lastName}`,
+      from,
+      to,
+      reason: reason || "-",
+      status: "GEMELDET"
+    });
+
+    saveAll();
+    closeModal();
+    appModal("Krankmeldung gespeichert", `Zeitraum:<br><b>${from} bis ${to}</b><br><br>Status:<br><b>GEMELDET</b>`);
+  };
+}
 
 function openVacationForm(user) {
-  window.currentUserForForm = user;
-
-  inputModal(
+  appModal(
     "Urlaub beantragen",
-    [
-      { id: "vacFrom", label: "Von", placeholder: "TT.MM.JJJJ" },
-      { id: "vacTo", label: "Bis", placeholder: "TT.MM.JJJJ" },
-      { id: "vacReason", label: "Grund optional", placeholder: "optional" }
-    ],
-    "submitVacationRequest"
+    `
+      <label>Von</label>
+      <input id="vacFrom" type="date">
+
+      <label>Bis</label>
+      <input id="vacTo" type="date">
+
+      <label>Grund optional</label>
+      <textarea id="vacReason" placeholder="optional"></textarea>
+    `,
+    `<button onclick="submitVacationRequest()">Beantragen</button>`
   );
+
+  window.submitVacationRequest = function () {
+    const from = document.getElementById("vacFrom").value;
+    const to = document.getElementById("vacTo").value;
+    const reason = document.getElementById("vacReason").value.trim() || "-";
+
+    if (!from || !to) return appModal("Fehlende Angaben", "Bitte Zeitraum ausfüllen.");
+
+    vacationRequests.push({
+      id: `VAC-${Date.now()}`,
+      userId: user.userId,
+      name: `${user.firstName} ${user.lastName}`,
+      from,
+      to,
+      reason,
+      status: "BEANTRAGT"
+    });
+
+    saveAll();
+    closeModal();
+    appModal("Urlaubsantrag gespeichert", `Zeitraum:<br><b>${from} bis ${to}</b><br><br>Status:<br><b>BEANTRAGT</b>`);
+  };
 }
 
-window.submitVacationRequest = function () {
-  const user = window.currentUserForForm;
-  const from = document.getElementById("vacFrom").value.trim();
-  const to = document.getElementById("vacTo").value.trim();
-  const reason = document.getElementById("vacReason").value.trim() || "-";
-
-  if (!from || !to) {
-    return;
-  }
-
-  vacationRequests.push({
-    id: `VAC-${Date.now()}`,
-    userId: user.userId,
-    name: `${user.firstName} ${user.lastName}`,
-    from,
-    to,
-    reason,
-    status: "BEANTRAGT"
-  });
-
-  saveAll();
-  closeModal();
-
+function openMaterialForm(user, source = "Manuelle Materialmeldung") {
   appModal(
-    "Urlaubsantrag gespeichert",
-    `Von:<br><b>${from}</b><br><br>Bis:<br><b>${to}</b><br><br>Status:<br><b>BEANTRAGT</b>`
+    "Material melden",
+    `
+      <label>Material</label>
+      <input id="materialName" placeholder="z. B. Toilettenpapier">
+
+      <label>Hinweis</label>
+      <textarea id="materialNote" placeholder="optional"></textarea>
+    `,
+    `<button onclick="submitMaterialReport()">Speichern</button>`
   );
-};
+
+  window.submitMaterialReport = function () {
+    const material = document.getElementById("materialName").value.trim();
+    const note = document.getElementById("materialNote").value.trim();
+
+    if (!material) return;
+
+    materialReports.push({
+      id: `MATREP-${Date.now()}`,
+      userId: user.userId,
+      objectName: source,
+      material,
+      note,
+      createdAt: new Date().toLocaleString("de-DE"),
+      status: "NEU"
+    });
+
+    saveAll();
+    closeModal();
+    appModal("Materialmeldung gespeichert", `Material:<br><b>${material}</b><br><br>Status:<br><b>NEU</b>`);
+  };
+}
 
 function showSickReports() {
-  if (!sickReports.length) {
-    appModal("Krankmeldungen", "Keine Krankmeldungen vorhanden.");
-    return;
-  }
-
   appModal(
     "Krankmeldungen",
-    sickReports
-      .map(
-        (report) => `
-          Mitarbeiter:<br><b>${report.name}</b><br><br>
-          Datum:<br>${report.date}<br><br>
-          Grund:<br>${report.reason}<br><br>
-          Status:<br><b>${report.status}</b>
-        `
-      )
-      .join("<hr>")
+    sickReports.map(r =>
+      `Mitarbeiter:<br><b>${r.name}</b><br><br>Von:<br>${r.from}<br><br>Bis:<br>${r.to}<br><br>Grund:<br>${r.reason}<br><br>Status:<br><b>${r.status}</b>`
+    ).join("<hr>") || "Keine Krankmeldungen vorhanden."
   );
 }
 
 function showVacationRequests() {
-  if (!vacationRequests.length) {
-    appModal("Urlaubsanträge", "Keine Urlaubsanträge vorhanden.");
-    return;
-  }
-
   appModal(
     "Urlaubsanträge",
-    vacationRequests
-      .map(
-        (request) => `
-          Mitarbeiter:<br><b>${request.name}</b><br><br>
-          Von:<br>${request.from}<br><br>
-          Bis:<br>${request.to}<br><br>
-          Grund:<br>${request.reason}<br><br>
-          Status:<br><b>${request.status}</b>
-        `
-      )
-      .join("<hr>")
+    vacationRequests.map(v =>
+      `Mitarbeiter:<br><b>${v.name}</b><br><br>Von:<br>${v.from}<br><br>Bis:<br>${v.to}<br><br>Grund:<br>${v.reason}<br><br>Status:<br><b>${v.status}</b>`
+    ).join("<hr>") || "Keine Urlaubsanträge vorhanden."
   );
 }
 
 function showMaterialReports() {
-  if (!materialReports.length) {
-    appModal("Materialmeldungen", "Keine Materialmeldungen vorhanden.");
-    return;
-  }
-
   appModal(
     "Materialmeldungen",
-    materialReports
-      .map(
-        (report) => `
-          Objekt:<br><b>${report.objectName}</b><br><br>
-          Material:<br>${report.material}<br><br>
-          Zeit:<br>${report.createdAt}<br><br>
-          Status:<br><b>${report.status}</b>
-        `
-      )
-      .join("<hr>")
+    materialReports.map(m =>
+      `Objekt:<br><b>${m.objectName}</b><br><br>Material:<br>${m.material}<br><br>Hinweis:<br>${m.note || "-"}<br><br>Status:<br><b>${m.status}</b>`
+    ).join("<hr>") || "Keine Materialmeldungen vorhanden."
   );
 }
 
 function showObjects() {
   appModal(
     "Objekte",
-    objects
-      .map(
-        (object) => `
-          Objekt:<br><b>${object.Name}</b><br><br>
-          Adresse:<br>${object.Adresse}<br><br>
-          Objekt-ID:<br>${object.Objekt_ID}
-        `
-      )
-      .join("<hr>")
+    objects.map(o =>
+      `Objekt:<br><b>${o.Name}</b><br><br>Adresse:<br>${o.Adresse}<br><br>ID:<br>${o.Objekt_ID}`
+    ).join("<hr>")
   );
 }
 
 function showUsers() {
   appModal(
     "Benutzer",
-    users
-      .map(
-        (user) => `
-          Name:<br><b>${user.Vorname} ${user.Nachname}</b><br><br>
-          Rolle:<br>${user.Rolle}<br><br>
-          E-Mail:<br>${user.Email}<br><br>
-          Status:<br><b>${user.Aktiv}</b>
-        `
-      )
-      .join("<hr>")
+    users.map(u =>
+      `Name:<br><b>${u.Vorname} ${u.Nachname}</b><br><br>Rolle:<br>${u.Rolle}<br><br>Status:<br><b>${u.Aktiv}</b>`
+    ).join("<hr>")
   );
 }
 
@@ -728,29 +530,6 @@ const savedUser = localStorage.getItem("facilityUser");
 
 if (savedUser) {
   renderDashboard(JSON.parse(savedUser));
+} else {
+  renderLogin();
 }
-
-const loginBtn = document.getElementById("loginBtn");
-
-loginBtn?.addEventListener("click", () => {
-  const email = document.getElementById("email")?.value || "";
-  const password = document.getElementById("password")?.value || "";
-  const message = document.getElementById("message");
-
-  const result = login(email, password);
-
-  if (!result.success) {
-    message.innerText = result.message;
-    message.style.color = "red";
-    return;
-  }
-
-  localStorage.setItem("facilityUser", JSON.stringify(result.user));
-
-  message.innerText = `Login erfolgreich (${result.user.role})`;
-  message.style.color = "green";
-
-  setTimeout(() => {
-    renderDashboard(result.user);
-  }, 300);
-});
