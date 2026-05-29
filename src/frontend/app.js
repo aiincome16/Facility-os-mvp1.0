@@ -172,7 +172,9 @@ function renderDashboard(user) {
     localStorage.removeItem("facilityUser");
     location.reload();
   });
-
+document.getElementById("sickBtn")?.addEventListener("click", () => {
+  reportSick(user);
+});
   document.getElementById("qrScanBtn")?.addEventListener("click", () => {
     handleQRScan(user);
   });
@@ -320,7 +322,34 @@ function showMyShifts(user) {
 
   alert(text);
 }
+function reportSick(user) {
+  const reason =
+    prompt(
+      "Grund der Krankmeldung"
+    );
 
+  if (!reason) return;
+
+  const today =
+    new Date()
+      .toLocaleDateString(
+        "de-DE"
+      );
+
+  alert(
+    `Krankmeldung gespeichert
+
+Mitarbeiter:
+${user.firstName}
+${user.lastName}
+
+Datum:
+${today}
+
+Grund:
+${reason}`
+  );
+}
 function getMenuByRole(role) {
   if (role === "ADMIN") {
     return `
@@ -342,7 +371,9 @@ function getMenuByRole(role) {
     return `
       <button id="qrScanBtn">QR scannen</button>
       <button id="myShiftBtn">Meine Schichten</button>
-      <button>Krank melden</button>
+      <button id="sickBtn">
+  Krank melden
+</button>
       <button>Urlaub beantragen</button>
     `;
   }
