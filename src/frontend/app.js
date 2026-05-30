@@ -42,8 +42,8 @@ const objectGuides = [
     Alarmanlage: "Nach 20:00 Uhr aktivieren. Bedienfeld im Flur neben Büro.",
     Parken: "Parkplatz hinter dem Objekt nutzen, nicht vor Kundeneingang.",
     Besonderheiten: "Laborraum nicht betreten. Verkaufsfläche besonders auf Glas und Spuren prüfen.",
-    Grundriss: "Demo-Grundriss: Eingang → Verkaufsraum → Sanitär → Lager.",
-    Video: "Demo-Video-Begehung: Start am Hintereingang, Rundgang durch alle freigegebenen Räume."
+    Grundriss: ["Hintereingang", "Verkaufsraum", "Sanitär", "Lager / Personalbereich"],
+    Video: "Demo-Video-Begehung: Rundgang vom Hintereingang durch alle freigegebenen Räume."
   },
   {
     Objekt_ID: "OBJ-002",
@@ -54,60 +54,19 @@ const objectGuides = [
     Alarmanlage: "Keine Alarmanlage aktiv.",
     Parken: "Kurzzeitparkplatz vor dem Objekt.",
     Besonderheiten: "Behandlungsräume nur nach Freigabe reinigen.",
-    Grundriss: "Demo-Grundriss: Empfang → Wartebereich → WC → Flur.",
+    Grundriss: ["Haupteingang", "Empfang", "Wartebereich", "Sanitär"],
     Video: "Demo-Video-Begehung: Praxisrundgang mit Fokus auf Wartebereich und Sanitär."
   }
 ];
 
 const cleaningMaterials = [
-  {
-    Material_ID: "MAT-001",
-    Name: "Sanitärreiniger",
-    Kategorie: "Reiniger",
-    Gefahr: "Nicht mit Chlor mischen. Handschuhe tragen.",
-    Dosierung: "50 ml auf 5 Liter Wasser",
-    NichtAuf: "Naturstein, empfindliche Oberflächen"
-  },
-  {
-    Material_ID: "MAT-002",
-    Name: "Glasreiniger",
-    Kategorie: "Reiniger",
-    Gefahr: "Nicht einatmen. Nicht auf heiße Flächen sprühen.",
-    Dosierung: "Direkt anwenden",
-    NichtAuf: "unversiegeltes Holz"
-  },
-  {
-    Material_ID: "MAT-003",
-    Name: "Neutralreiniger",
-    Kategorie: "Reiniger",
-    Gefahr: "Kontakt mit Augen vermeiden.",
-    Dosierung: "30 ml auf 5 Liter Wasser",
-    NichtAuf: "-"
-  },
-  {
-    Material_ID: "MAT-004",
-    Name: "Rote Reinigungstücher",
-    Kategorie: "Material",
-    Gefahr: "Nur Sanitärbereich.",
-    Dosierung: "-",
-    NichtAuf: "-"
-  },
-  {
-    Material_ID: "MAT-005",
-    Name: "Blaue Reinigungstücher",
-    Kategorie: "Material",
-    Gefahr: "Nur allgemeine Flächen.",
-    Dosierung: "-",
-    NichtAuf: "-"
-  },
-  {
-    Material_ID: "MAT-006",
-    Name: "Müllbeutel klein",
-    Kategorie: "Material",
-    Gefahr: "-",
-    Dosierung: "-",
-    NichtAuf: "-"
-  }
+  { Material_ID: "MAT-001", Name: "Sanitärreiniger", Kategorie: "Reiniger", Gefahr: "Nicht mit Chlor mischen. Handschuhe tragen.", Dosierung: "50 ml auf 5 Liter Wasser", NichtAuf: "Naturstein, empfindliche Oberflächen" },
+  { Material_ID: "MAT-002", Name: "Glasreiniger", Kategorie: "Reiniger", Gefahr: "Nicht einatmen. Nicht auf heiße Flächen sprühen.", Dosierung: "Direkt anwenden", NichtAuf: "unversiegeltes Holz" },
+  { Material_ID: "MAT-003", Name: "Neutralreiniger", Kategorie: "Reiniger", Gefahr: "Kontakt mit Augen vermeiden.", Dosierung: "30 ml auf 5 Liter Wasser", NichtAuf: "-" },
+  { Material_ID: "MAT-004", Name: "Rote Reinigungstücher", Kategorie: "Material", Gefahr: "Nur Sanitärbereich.", Dosierung: "-", NichtAuf: "-" },
+  { Material_ID: "MAT-005", Name: "Blaue Reinigungstücher", Kategorie: "Material", Gefahr: "Nur allgemeine Flächen.", Dosierung: "-", NichtAuf: "-" },
+  { Material_ID: "MAT-006", Name: "Müllbeutel klein", Kategorie: "Material", Gefahr: "-", Dosierung: "-", NichtAuf: "-" },
+  { Material_ID: "MAT-007", Name: "Toilettenpapier", Kategorie: "Verbrauch", Gefahr: "-", Dosierung: "-", NichtAuf: "-" }
 ];
 
 const objectMaterialMap = [
@@ -117,10 +76,12 @@ const objectMaterialMap = [
   { Objekt_ID: "OBJ-001", Material_ID: "MAT-004" },
   { Objekt_ID: "OBJ-001", Material_ID: "MAT-005" },
   { Objekt_ID: "OBJ-001", Material_ID: "MAT-006" },
+  { Objekt_ID: "OBJ-001", Material_ID: "MAT-007" },
   { Objekt_ID: "OBJ-002", Material_ID: "MAT-001" },
   { Objekt_ID: "OBJ-002", Material_ID: "MAT-003" },
   { Objekt_ID: "OBJ-002", Material_ID: "MAT-004" },
-  { Objekt_ID: "OBJ-002", Material_ID: "MAT-006" }
+  { Objekt_ID: "OBJ-002", Material_ID: "MAT-006" },
+  { Objekt_ID: "OBJ-002", Material_ID: "MAT-007" }
 ];
 
 const roomPlans = [
@@ -187,30 +148,9 @@ const roomPlans = [
 ];
 
 const wastePlans = [
-  {
-    Objekt_ID: "OBJ-001",
-    Muellart: "Papier",
-    Intervall: "Montag",
-    Uhrzeit: "bis 06:00",
-    Standort: "Blaue Tonne hinter Gebäude",
-    PflichtBeimCheckout: "JA"
-  },
-  {
-    Objekt_ID: "OBJ-001",
-    Muellart: "Restmüll",
-    Intervall: "Freitag",
-    Uhrzeit: "nach Reinigung",
-    Standort: "Schwarze Tonne hinter Gebäude",
-    PflichtBeimCheckout: "JA"
-  },
-  {
-    Objekt_ID: "OBJ-002",
-    Muellart: "Restmüll",
-    Intervall: "Dienstag und Freitag",
-    Uhrzeit: "nach Reinigung",
-    Standort: "Hof links",
-    PflichtBeimCheckout: "JA"
-  }
+  { Objekt_ID: "OBJ-001", Muellart: "Papier", Intervall: "Montag", Uhrzeit: "bis 06:00", Standort: "Blaue Tonne hinter Gebäude", PflichtBeimCheckout: "JA" },
+  { Objekt_ID: "OBJ-001", Muellart: "Restmüll", Intervall: "Freitag", Uhrzeit: "nach Reinigung", Standort: "Schwarze Tonne hinter Gebäude", PflichtBeimCheckout: "JA" },
+  { Objekt_ID: "OBJ-002", Muellart: "Restmüll", Intervall: "Dienstag und Freitag", Uhrzeit: "nach Reinigung", Standort: "Hof links", PflichtBeimCheckout: "JA" }
 ];
 
 const qrCodes = [
@@ -340,11 +280,7 @@ function login(email, password) {
       firstName: user.Vorname,
       lastName: user.Nachname,
       email: user.Email
-    }
-  };
-}
-
-function renderDashboard(user) {
+      function renderDashboard(user) {
   document.getElementById("app").innerHTML = `
     <main class="app-shell">
       <section class="card">
@@ -370,56 +306,99 @@ function renderDashboard(user) {
   bindEvents(user);
 }
 
+function dashboardGroup(title, colorClass, buttons) {
+  return `
+    <div class="category-title">${title}</div>
+    <div class="category">
+      ${buttons.map(btn => `
+        <button class="${colorClass}" id="${btn.id}">
+          ${btn.label}
+        </button>
+      `).join("")}
+    </div>
+  `;
+}
+
 function getMenuByRole(role) {
   if (role === "MITARBEITER") {
     return `
-      <button id="qrScanBtn">QR scannen</button>
-      <button id="myShiftBtn">Meine Schichten</button>
-      <button id="objectInfoBtn">Objektinfo</button>
-      <button id="cleaningPlanBtn">Putzplan</button>
-      <button id="roomsBtn">Räume</button>
-      <button id="wasteBtn">Müllplan</button>
-      <button id="dangerBtn">Gefahrenhinweise</button>
-      <button id="sickBtn">Krank melden</button>
-      <button id="vacationBtn">Urlaub beantragen</button>
-      <button id="materialBtn">Material melden</button>
-      <button id="helpBtn">Hilfe</button>
+      ${dashboardGroup("Heute & Schicht", "", [
+        { id: "qrScanBtn", label: "QR scannen" },
+        { id: "myShiftBtn", label: "Meine Schichten" }
+      ])}
+
+      ${dashboardGroup("Objektwissen", "green", [
+        { id: "objectInfoBtn", label: "Objektinfo" },
+        { id: "floorPlanBtn", label: "Grundriss" },
+        { id: "cleaningPlanBtn", label: "Putzplan" },
+        { id: "roomsBtn", label: "Räume" },
+        { id: "wasteBtn", label: "Müllplan" },
+        { id: "dangerBtn", label: "Gefahrenhinweise" }
+      ])}
+
+      ${dashboardGroup("Meldungen", "yellow", [
+        { id: "materialBtn", label: "Material melden" },
+        { id: "sickBtn", label: "Krank melden" },
+        { id: "vacationBtn", label: "Urlaub beantragen" }
+      ])}
+
+      ${dashboardGroup("Support", "secondary", [
+        { id: "helpBtn", label: "Hilfe" }
+      ])}
     `;
   }
 
   if (role === "OBJEKTLEITER") {
     return `
-      <button id="managerShiftsBtn">Schichten ansehen</button>
-      <button id="managerSickBtn">Krankmeldungen</button>
-      <button id="managerVacationBtn">Urlaubsanträge</button>
-      <button id="managerMaterialBtn">Materialmeldungen</button>
-      <button id="replacementBtn">Vertretungen</button>
-      <button id="objectsBtn">Objekte</button>
-      <button id="cleaningPlanBtn">Putzpläne</button>
-      <button id="dangerBtn">Gefahrenhinweise</button>
+      ${dashboardGroup("Personal & Schichten", "", [
+        { id: "managerShiftsBtn", label: "Schichten ansehen" },
+        { id: "replacementBtn", label: "Vertretungen" }
+      ])}
+
+      ${dashboardGroup("Meldungen", "yellow", [
+        { id: "managerSickBtn", label: "Krankmeldungen" },
+        { id: "managerVacationBtn", label: "Urlaubsanträge" },
+        { id: "managerMaterialBtn", label: "Materialmeldungen" }
+      ])}
+
+      ${dashboardGroup("Objekte", "green", [
+        { id: "objectsBtn", label: "Objekte" },
+        { id: "cleaningPlanBtn", label: "Putzpläne" },
+        { id: "dangerBtn", label: "Gefahrenhinweise" }
+      ])}
     `;
   }
 
   if (role === "ADMIN") {
     return `
-      <button id="usersBtn">Benutzerliste</button>
-      <button id="objectsBtn">Objekte</button>
-      <button id="managerShiftsBtn">Alle Schichten</button>
-      <button id="managerSickBtn">Krankmeldungen</button>
-      <button id="managerVacationBtn">Urlaubsanträge</button>
-      <button id="managerMaterialBtn">Materialmeldungen</button>
-      <button id="replacementBtn">Vertretungen</button>
-      <button id="cleaningPlanBtn">Putzpläne</button>
-      <button id="dangerBtn">Gefahrenhinweise</button>
+      ${dashboardGroup("System", "", [
+        { id: "usersBtn", label: "Benutzerliste" },
+        { id: "objectsBtn", label: "Objekte" }
+      ])}
+
+      ${dashboardGroup("Betrieb", "green", [
+        { id: "managerShiftsBtn", label: "Alle Schichten" },
+        { id: "cleaningPlanBtn", label: "Putzpläne" },
+        { id: "dangerBtn", label: "Gefahrenhinweise" }
+      ])}
+
+      ${dashboardGroup("Meldungen", "yellow", [
+        { id: "managerSickBtn", label: "Krankmeldungen" },
+        { id: "managerVacationBtn", label: "Urlaubsanträge" },
+        { id: "managerMaterialBtn", label: "Materialmeldungen" },
+        { id: "replacementBtn", label: "Vertretungen" }
+      ])}
     `;
   }
 
   if (role === "KUNDE") {
     return `
-      <button id="customerStatusBtn">Objektstatus</button>
-      <button id="customerNextBtn">Nächste Reinigung</button>
-      <button id="customerRequestBtn">Wunsch senden</button>
-      <button id="customerComplaintBtn">Beschwerde senden</button>
+      ${dashboardGroup("Kundenbereich", "", [
+        { id: "customerStatusBtn", label: "Objektstatus" },
+        { id: "customerNextBtn", label: "Nächste Reinigung" },
+        { id: "customerRequestBtn", label: "Wunsch senden" },
+        { id: "customerComplaintBtn", label: "Beschwerde senden" }
+      ])}
     `;
   }
 
@@ -441,6 +420,7 @@ function bindEvents(user) {
   document.getElementById("qrScanBtn")?.addEventListener("click", () => handleQRScan(user));
   document.getElementById("myShiftBtn")?.addEventListener("click", () => showMyShifts(user));
   document.getElementById("objectInfoBtn")?.addEventListener("click", () => showObjectInfoForUser(user));
+  document.getElementById("floorPlanBtn")?.addEventListener("click", () => showFloorPlanForUser(user));
   document.getElementById("cleaningPlanBtn")?.addEventListener("click", () => showCleaningPlans(user));
   document.getElementById("roomsBtn")?.addEventListener("click", () => showRoomsForUser(user));
   document.getElementById("wasteBtn")?.addEventListener("click", () => showWastePlanForUser(user));
@@ -466,8 +446,7 @@ function bindEvents(user) {
 
 function getPrimaryObjectForUser(user) {
   const shift = shifts.find(s => s.Mitarbeiter_ID === user.userId);
-  if (shift) return shift.Objekt_ID;
-  return objects[0].Objekt_ID;
+  return shift ? shift.Objekt_ID : objects[0].Objekt_ID;
 }
 
 function detectQRType(qrId) {
@@ -538,10 +517,7 @@ function manualQr(user) {
 function processQR(qrText, user) {
   const result = detectQRType(qrText);
 
-  if (!result.success) {
-    appModal("QR Fehler", result.message);
-    return;
-  }
+  if (!result.success) return appModal("QR Fehler", result.message);
 
   if (result.qr.QR_Typ === "MATERIAL_LAGER") {
     openMaterialForm(user, result.qr.Objekt_ID);
@@ -554,10 +530,7 @@ function processQR(qrText, user) {
     s.Status !== "ABGESCHLOSSEN"
   );
 
-  if (!shift) {
-    appModal("Keine Schicht gefunden", "Für diesen QR-Code wurde keine offene Schicht gefunden.");
-    return;
-  }
+  if (!shift) return appModal("Keine Schicht gefunden", "Für diesen QR-Code wurde keine offene Schicht gefunden.");
 
   const knownKey = `${user.userId}-${shift.Objekt_ID}`;
 
@@ -581,18 +554,10 @@ function processQR(qrText, user) {
   }
 
   if (!shift.Checkout_Zeit) {
-    const openWaste = wastePlans.filter(w => w.Objekt_ID === shift.Objekt_ID && w.PflichtBeimCheckout === "JA");
-
     shift.Checkout_Zeit = now;
     shift.Status = "ABGESCHLOSSEN";
     saveAll();
-
-    appModal(
-      "Schicht beendet",
-      `Objekt:<br><b>${shift.Objekt_Name}</b><br><br>
-      Check-Out:<br><b>${now}</b><br><br>
-      Hinweis:<br>${openWaste.length ? "Müllpflicht wurde in der Demo als geprüft markiert." : "Keine Müllpflicht hinterlegt."}`
-    );
+    appModal("Schicht beendet", `Objekt:<br><b>${shift.Objekt_Name}</b><br><br>Check-Out:<br><b>${now}</b>`);
   }
 }
 
@@ -605,15 +570,152 @@ function showFirstObjectInstruction(objectId) {
   appModal(
     "Erstes Mal im Objekt",
     `
-      Du bist zum ersten Mal in:<br><b>${object.Name}</b><br><br>
-      Bitte ansehen:<br><br>
-      Grundriss:<br>${guide.Grundriss}<br><br>
-      Video-Begehung:<br>${guide.Video}<br><br>
-      Schlüsselort:<br>${guide.Schluesselort}<br><br>
-      Materiallager:<br>${guide.Materiallager}<br><br>
-      Müll:<br>${guide.Muellstandort}<br><br>
-      Wichtig:<br><b>${guide.Besonderheiten}</b>
+      <div class="info-card yellow">
+        <div class="card-title">Wichtige Einweisung</div>
+        Du bist zum ersten Mal in <b>${object.Name}</b>.
+      </div>
+
+      ${formatFloorPlan(guide)}
+
+      <div class="info-card blue"><div class="card-title">Video-Begehung</div>${guide.Video}</div>
+      <div class="info-card green"><div class="card-title">Schlüssel</div>${guide.Schluesselort}</div>
+      <div class="info-card green"><div class="card-title">Materiallager</div>${guide.Materiallager}</div>
+      <div class="info-card yellow"><div class="card-title">Müll</div>${guide.Muellstandort}</div>
+      <div class="info-card red"><div class="card-title">Achtung</div>${guide.Besonderheiten}</div>
     `
+  );
+}
+
+function formatFloorPlan(guide) {
+  return `
+    <div class="floorplan">
+      <b>Grundriss / Raumfolge</b>
+      ${guide.Grundriss.map(room => `<div class="floor-room">${room}</div>`).join("")}
+    </div>
+  `;
+}
+
+function showObjectInfoForUser(user) {
+  const objectId = getPrimaryObjectForUser(user);
+  showObjectInfo(objectId);
+}
+
+function showObjectInfo(objectId) {
+  const object = objects.find(o => o.Objekt_ID === objectId);
+  const guide = objectGuides.find(g => g.Objekt_ID === objectId);
+
+  if (!object || !guide) return appModal("Objektinfo", "Keine Objektinformationen vorhanden.");
+
+  appModal(
+    `Objektinfo: ${object.Name}`,
+    `
+      <div class="info-card blue"><div class="card-title">Adresse</div>${object.Adresse}</div>
+      <div class="info-card"><div class="card-title">Ansprechpartner</div>${object.Ansprechpartner}<br>${object.Telefon}</div>
+      <div class="info-card green"><div class="card-title">Zugang</div>${guide.Zugang}</div>
+      <div class="info-card green"><div class="card-title">Schlüssel</div>${guide.Schluesselort}</div>
+      <div class="info-card green"><div class="card-title">Materiallager</div>${guide.Materiallager}</div>
+      <div class="info-card yellow"><div class="card-title">Müllstandort</div>${guide.Muellstandort}</div>
+      <div class="info-card red"><div class="card-title">Besonderheiten</div>${guide.Besonderheiten}</div>
+      <div class="info-card purple"><div class="card-title">Video-Begehung</div>${guide.Video}</div>
+      ${formatFloorPlan(guide)}
+    `
+  );
+}
+
+function showFloorPlanForUser(user) {
+  const objectId = getPrimaryObjectForUser(user);
+  const object = objects.find(o => o.Objekt_ID === objectId);
+  const guide = objectGuides.find(g => g.Objekt_ID === objectId);
+
+  if (!object || !guide) return appModal("Grundriss", "Kein Grundriss vorhanden.");
+
+  appModal(`Grundriss: ${object.Name}`, formatFloorPlan(guide));
+}
+
+function showCleaningPlans(user = null) {
+  const objectId = user?.role === "MITARBEITER" ? getPrimaryObjectForUser(user) : null;
+  const plans = objectId ? roomPlans.filter(r => r.Objekt_ID === objectId) : roomPlans;
+
+  appModal("Putzpläne", plans.map(formatRoomPlan).join("") || "Keine Putzpläne vorhanden.");
+}
+
+function showRoomsForUser(user) {
+  const objectId = getPrimaryObjectForUser(user);
+  const plans = roomPlans.filter(r => r.Objekt_ID === objectId);
+
+  appModal("Räume", plans.map(formatRoomPlan).join("") || "Keine Räume vorhanden.");
+}
+
+function formatRoomPlan(room) {
+  const materials = room.Materialien
+    .map(id => cleaningMaterials.find(m => m.Material_ID === id)?.Name || id)
+    .join(", ");
+
+  return `
+    <div class="info-card blue">
+      <div class="card-title">${room.Reihenfolge}. ${room.Raum}</div>
+      <b>Sollzeit:</b> ${room.Sollzeit_Min} Minuten<br>
+      <b>Intervall:</b> ${room.Intervall}
+    </div>
+
+    <div class="info-card green">
+      <div class="card-title">Aufgaben</div>
+      ${room.Aufgaben.map(a => `• ${a}`).join("<br>")}
+    </div>
+
+    <div class="info-card purple">
+      <div class="card-title">Mittel</div>
+      ${materials}
+    </div>
+
+    <div class="info-card yellow">
+      <div class="card-title">Kontrollpunkte</div>
+      ${room.Kontrollpunkte.map(k => `• ${k}`).join("<br>")}
+    </div>
+
+    <div class="info-card red">
+      <div class="card-title">Hinweis</div>
+      ${room.Hinweis}
+    </div>
+  `;
+}
+
+function showWastePlanForUser(user) {
+  const objectId = getPrimaryObjectForUser(user);
+  const plans = wastePlans.filter(w => w.Objekt_ID === objectId);
+
+  appModal(
+    "Müllplan",
+    plans.map(w => `
+      <div class="table-row">
+        <b>${w.Muellart}</b><br>
+        Intervall: ${w.Intervall}<br>
+        Uhrzeit: ${w.Uhrzeit}<br>
+        Standort: ${w.Standort}<br>
+        Pflicht beim Checkout: <b>${w.PflichtBeimCheckout}</b>
+      </div>
+    `).join("") || "Kein Müllplan vorhanden."
+  );
+}
+
+function showDangerHints(user = null) {
+  const objectId = user?.role === "MITARBEITER" ? getPrimaryObjectForUser(user) : null;
+  const materialIds = objectId
+    ? objectMaterialMap.filter(x => x.Objekt_ID === objectId).map(x => x.Material_ID)
+    : cleaningMaterials.map(m => m.Material_ID);
+
+  const materials = cleaningMaterials.filter(m => materialIds.includes(m.Material_ID));
+
+  appModal(
+    "Gefahrenhinweise",
+    materials.map(m => `
+      <div class="info-card red">
+        <div class="card-title">${m.Name}</div>
+        Gefahr: ${m.Gefahr}<br><br>
+        Dosierung: ${m.Dosierung}<br><br>
+        Nicht verwenden auf: ${m.NichtAuf}
+      </div>
+    `).join("") || "Keine Gefahrenhinweise vorhanden."
   );
 }
 
@@ -630,118 +732,16 @@ function formatShift(s) {
   const employee = users.find(u => u.User_ID === s.Mitarbeiter_ID);
 
   return `
-    Mitarbeiter:<br><b>${employee?.Vorname || "-"} ${employee?.Nachname || ""}</b><br><br>
-    Objekt:<br><b>${s.Objekt_Name}</b><br><br>
-    Datum:<br>${s.Datum}<br><br>
-    Status:<br><b>${s.Status}</b><br><br>
-    Check-In:<br>${s.Checkin_Zeit || "-"}<br>
-    Check-Out:<br>${s.Checkout_Zeit || "-"}<br>
-    Vertretung:<br>${s.Vertretung_ID || "-"}
+    <div class="info-card blue">
+      <div class="card-title">${s.Objekt_Name}</div>
+      Mitarbeiter: <b>${employee?.Vorname || "-"} ${employee?.Nachname || ""}</b><br>
+      Datum: ${s.Datum}<br>
+      Status: <b>${s.Status}</b><br>
+      Check-In: ${s.Checkin_Zeit || "-"}<br>
+      Check-Out: ${s.Checkout_Zeit || "-"}<br>
+      Vertretung: ${s.Vertretung_ID || "-"}
+    </div>
   `;
-}
-
-function showObjectInfoForUser(user) {
-  const objectId = getPrimaryObjectForUser(user);
-  showObjectInfo(objectId);
-}
-
-function showObjectInfo(objectId) {
-  const object = objects.find(o => o.Objekt_ID === objectId);
-  const guide = objectGuides.find(g => g.Objekt_ID === objectId);
-
-  if (!object || !guide) {
-    appModal("Objektinfo", "Keine Objektinformationen vorhanden.");
-    return;
-  }
-
-  appModal(
-    `Objektinfo: ${object.Name}`,
-    `
-      Adresse:<br><b>${object.Adresse}</b><br><br>
-      Ansprechpartner:<br>${object.Ansprechpartner}<br>
-      Telefon:<br>${object.Telefon}<br><br>
-      Zugang:<br>${guide.Zugang}<br><br>
-      Schlüssel:<br>${guide.Schluesselort}<br><br>
-      Materiallager:<br>${guide.Materiallager}<br><br>
-      Müllstandort:<br>${guide.Muellstandort}<br><br>
-      Alarmanlage:<br>${guide.Alarmanlage}<br><br>
-      Parken:<br>${guide.Parken}<br><br>
-      Besonderheiten:<br><b>${guide.Besonderheiten}</b><br><br>
-      Foto/Video:<br>${guide.Video}<br><br>
-      Grundriss:<br>${guide.Grundriss}
-    `
-  );
-}
-
-function showCleaningPlans(user = null) {
-  const objectId = user?.role === "MITARBEITER" ? getPrimaryObjectForUser(user) : null;
-  const plans = objectId ? roomPlans.filter(r => r.Objekt_ID === objectId) : roomPlans;
-
-  appModal(
-    "Putzpläne",
-    plans.map(formatRoomPlan).join("<hr>") || "Keine Putzpläne vorhanden."
-  );
-}
-
-function showRoomsForUser(user) {
-  const objectId = getPrimaryObjectForUser(user);
-  const plans = roomPlans.filter(r => r.Objekt_ID === objectId);
-
-  appModal(
-    "Räume",
-    plans.map(formatRoomPlan).join("<hr>") || "Keine Räume vorhanden."
-  );
-}
-
-function formatRoomPlan(room) {
-  const materials = room.Materialien
-    .map(id => cleaningMaterials.find(m => m.Material_ID === id)?.Name || id)
-    .join(", ");
-
-  return `
-    Raum:<br><b>${room.Reihenfolge}. ${room.Raum}</b><br><br>
-    Sollzeit:<br><b>${room.Sollzeit_Min} Minuten</b><br><br>
-    Intervall:<br>${room.Intervall}<br><br>
-    Aufgaben:<br>${room.Aufgaben.map(a => `• ${a}`).join("<br>")}<br><br>
-    Mittel:<br>${materials}<br><br>
-    Kontrollpunkte:<br>${room.Kontrollpunkte.map(k => `• ${k}`).join("<br>")}<br><br>
-    Hinweis:<br><b>${room.Hinweis}</b>
-  `;
-}
-
-function showWastePlanForUser(user) {
-  const objectId = getPrimaryObjectForUser(user);
-  const plans = wastePlans.filter(w => w.Objekt_ID === objectId);
-
-  appModal(
-    "Müllplan",
-    plans.map(w => `
-      Müllart:<br><b>${w.Muellart}</b><br><br>
-      Intervall:<br>${w.Intervall}<br><br>
-      Uhrzeit:<br>${w.Uhrzeit}<br><br>
-      Standort:<br>${w.Standort}<br><br>
-      Pflicht beim Checkout:<br><b>${w.PflichtBeimCheckout}</b>
-    `).join("<hr>") || "Kein Müllplan vorhanden."
-  );
-}
-
-function showDangerHints(user = null) {
-  const objectId = user?.role === "MITARBEITER" ? getPrimaryObjectForUser(user) : null;
-  const materialIds = objectId
-    ? objectMaterialMap.filter(x => x.Objekt_ID === objectId).map(x => x.Material_ID)
-    : cleaningMaterials.map(m => m.Material_ID);
-
-  const materials = cleaningMaterials.filter(m => materialIds.includes(m.Material_ID));
-
-  appModal(
-    "Gefahrenhinweise",
-    materials.map(m => `
-      Mittel:<br><b>${m.Name}</b><br><br>
-      Gefahr:<br>${m.Gefahr}<br><br>
-      Dosierung:<br>${m.Dosierung}<br><br>
-      Nicht verwenden auf:<br>${m.NichtAuf}
-    `).join("<hr>") || "Keine Gefahrenhinweise vorhanden."
-  );
 }
 
 function openSickForm(user) {
@@ -765,10 +765,7 @@ function openSickForm(user) {
     const to = document.getElementById("sickTo").value;
     const reason = document.getElementById("sickReason").value.trim();
 
-    if (!from || !to) {
-      appModal("Fehlende Angaben", "Bitte Zeitraum ausfüllen.");
-      return;
-    }
+    if (!from || !to) return appModal("Fehlende Angaben", "Bitte Zeitraum ausfüllen.");
 
     sickReports.push({
       id: `SICK-${Date.now()}`,
@@ -790,9 +787,7 @@ function openSickForm(user) {
 }
 
 function createReplacementRequest(user, from, to) {
-  const affectedShifts = shifts.filter(
-    s => s.Mitarbeiter_ID === user.userId && s.Status !== "ABGESCHLOSSEN"
-  );
+  const affectedShifts = shifts.filter(s => s.Mitarbeiter_ID === user.userId && s.Status !== "ABGESCHLOSSEN");
 
   affectedShifts.forEach(shift => {
     replacementRequests.push({
@@ -808,10 +803,7 @@ function createReplacementRequest(user, from, to) {
       candidateName: null,
       status: "OFFEN"
     });
-  });
-}
-
-function openVacationForm(user) {
+  });function openVacationForm(user) {
   appModal(
     "Urlaub beantragen",
     `
@@ -832,10 +824,7 @@ function openVacationForm(user) {
     const to = document.getElementById("vacTo").value;
     const reason = document.getElementById("vacReason").value.trim() || "-";
 
-    if (!from || !to) {
-      appModal("Fehlende Angaben", "Bitte Zeitraum ausfüllen.");
-      return;
-    }
+    if (!from || !to) return appModal("Fehlende Angaben", "Bitte Zeitraum ausfüllen.");
 
     vacationRequests.push({
       id: `VAC-${Date.now()}`,
@@ -857,7 +846,9 @@ function openVacationForm(user) {
 }
 
 function openMaterialForm(user, fixedObjectId = null) {
-  const objectOptions = objects.map(o => `<option value="${o.Objekt_ID}">${o.Name}</option>`).join("");
+  const objectOptions = objects
+    .map(o => `<option value="${o.Objekt_ID}">${o.Name}</option>`)
+    .join("");
 
   const objectInput = fixedObjectId
     ? `<input id="materialObject" value="${fixedObjectId}" type="hidden">`
@@ -876,7 +867,22 @@ function openMaterialForm(user, fixedObjectId = null) {
       <label>Material</label>
       <select id="materialName"></select>
 
-      <label>Menge / Zustand</label>
+      <label>Menge</label>
+      <input id="materialQuantity" type="number" min="1" placeholder="z. B. 3">
+
+      <label>Einheit</label>
+      <select id="materialUnit">
+        <option>Stück</option>
+        <option>Liter</option>
+        <option>5L Kanister</option>
+        <option>10L Kanister</option>
+        <option>Rolle</option>
+        <option>Packung</option>
+        <option>Flasche</option>
+        <option>Box</option>
+      </select>
+
+      <label>Zustand</label>
       <select id="materialAmount">
         <option>fast leer</option>
         <option>leer</option>
@@ -895,7 +901,10 @@ function openMaterialForm(user, fixedObjectId = null) {
 
   window.renderMaterialSelect = function () {
     const objectId = document.getElementById("materialObject").value;
-    const materialIds = objectMaterialMap.filter(x => x.Objekt_ID === objectId).map(x => x.Material_ID);
+    const materialIds = objectMaterialMap
+      .filter(x => x.Objekt_ID === objectId)
+      .map(x => x.Material_ID);
+
     const select = document.getElementById("materialName");
 
     select.innerHTML = cleaningMaterials
@@ -910,15 +919,18 @@ function openMaterialForm(user, fixedObjectId = null) {
     const objectId = document.getElementById("materialObject").value;
     const object = objects.find(o => o.Objekt_ID === objectId);
     const material = document.getElementById("materialName").value;
+    const quantity = document.getElementById("materialQuantity").value || "1";
+    const unit = document.getElementById("materialUnit").value;
     const amount = document.getElementById("materialAmount").value;
     const note = document.getElementById("materialNote").value.trim();
     const photo = document.getElementById("materialPhoto").files[0]?.name || "-";
 
     if (!material) return;
 
-    const kiSuggestion = amount === "leer"
-      ? "KI-Vorschlag: sofort nachbestellen"
-      : "KI-Vorschlag: bei nächster Bestellung berücksichtigen";
+    const kiSuggestion =
+      amount === "leer" || amount === "defekt"
+        ? "KI-Vorschlag: sofort nachbestellen"
+        : "KI-Vorschlag: bei nächster Bestellung berücksichtigen";
 
     materialReports.push({
       id: `MATREP-${Date.now()}`,
@@ -926,6 +938,8 @@ function openMaterialForm(user, fixedObjectId = null) {
       objectId,
       objectName: object?.Name || objectId,
       material,
+      quantity,
+      unit,
       amount,
       note,
       photo,
@@ -939,11 +953,24 @@ function openMaterialForm(user, fixedObjectId = null) {
 
     appModal(
       "Materialmeldung gespeichert",
-      `Objekt:<br><b>${object?.Name || objectId}</b><br><br>
-      Material:<br><b>${material}</b><br><br>
-      Zustand:<br>${amount}<br><br>
-      Foto:<br>${photo}<br><br>
-      ${kiSuggestion}`
+      `
+        <div class="info-card green">
+          <div class="card-title">Objekt</div>
+          ${object?.Name || objectId}
+        </div>
+
+        <div class="info-card blue">
+          <div class="card-title">Material</div>
+          ${material}<br>
+          Menge: <b>${quantity} ${unit}</b><br>
+          Zustand: ${amount}
+        </div>
+
+        <div class="info-card yellow">
+          <div class="card-title">KI-Vorschlag</div>
+          ${kiSuggestion}
+        </div>
+      `
     );
   };
 }
@@ -952,8 +979,17 @@ function showSickReports() {
   appModal(
     "Krankmeldungen",
     sickReports.map(r =>
-      `Mitarbeiter:<br><b>${r.name}</b><br><br>Von:<br>${r.from}<br><br>Bis:<br>${r.to}<br><br>Grund:<br>${r.reason}<br><br>Status:<br><b>${r.status}</b><br><br>Vertretung:<br><b>${r.replacementStatus || "OFFEN"}</b>`
-    ).join("<hr>") || "Keine Krankmeldungen vorhanden."
+      `
+      <div class="info-card red">
+        <div class="card-title">${r.name}</div>
+        Von: ${r.from}<br>
+        Bis: ${r.to}<br>
+        Grund: ${r.reason}<br>
+        Status: <b>${r.status}</b><br>
+        Vertretung: <b>${r.replacementStatus || "OFFEN"}</b>
+      </div>
+      `
+    ).join("") || "Keine Krankmeldungen vorhanden."
   );
 }
 
@@ -961,8 +997,17 @@ function showVacationRequests() {
   appModal(
     "Urlaubsanträge",
     vacationRequests.map(v =>
-      `Mitarbeiter:<br><b>${v.name}</b><br><br>Von:<br>${v.from}<br><br>Bis:<br>${v.to}<br><br>Grund:<br>${v.reason}<br><br>Status:<br><b>${v.status}</b><br><br>Vertretung:<br><b>${v.replacementStatus || "OFFEN"}</b>`
-    ).join("<hr>") || "Keine Urlaubsanträge vorhanden."
+      `
+      <div class="info-card yellow">
+        <div class="card-title">${v.name}</div>
+        Von: ${v.from}<br>
+        Bis: ${v.to}<br>
+        Grund: ${v.reason}<br>
+        Status: <b>${v.status}</b><br>
+        Vertretung: <b>${v.replacementStatus || "OFFEN"}</b>
+      </div>
+      `
+    ).join("") || "Keine Urlaubsanträge vorhanden."
   );
 }
 
@@ -970,8 +1015,19 @@ function showMaterialReports() {
   appModal(
     "Materialmeldungen",
     materialReports.map(m =>
-      `Objekt:<br><b>${m.objectName}</b><br><br>Material:<br>${m.material}<br><br>Zustand:<br>${m.amount || "-"}<br><br>Foto:<br>${m.photo || "-"}<br><br>Hinweis:<br>${m.note || "-"}<br><br>Status:<br><b>${m.status}</b><br><br>${m.kiSuggestion || ""}`
-    ).join("<hr>") || "Keine Materialmeldungen vorhanden."
+      `
+      <div class="info-card green">
+        <div class="card-title">${m.objectName}</div>
+        Material: <b>${m.material}</b><br>
+        Menge: ${m.quantity || "-"} ${m.unit || ""}<br>
+        Zustand: ${m.amount || "-"}<br>
+        Foto: ${m.photo || "-"}<br>
+        Hinweis: ${m.note || "-"}<br>
+        Status: <b>${m.status}</b><br><br>
+        ${m.kiSuggestion || ""}
+      </div>
+      `
+    ).join("") || "Keine Materialmeldungen vorhanden."
   );
 }
 
@@ -984,14 +1040,16 @@ function showReplacements() {
   appModal(
     "Vertretungen",
     replacementRequests.map(r => `
-      Mitarbeiter abwesend:<br><b>${r.sickName}</b><br><br>
-      Objekt:<br><b>${r.objectName}</b><br><br>
-      Zeitraum:<br>${r.from} bis ${r.to}<br><br>
-      Status:<br><b>${r.status}</b><br><br>
-      Kandidat:<br><b>${r.candidateName || "-"}</b><br><br>
-      <button onclick="findReplacement('${r.id}')">Vertretung suchen</button>
-      <button onclick="confirmReplacement('${r.id}')">Vertretung bestätigen</button>
-    `).join("<hr>")
+      <div class="info-card purple">
+        <div class="card-title">${r.objectName}</div>
+        Mitarbeiter abwesend:<br><b>${r.sickName}</b><br><br>
+        Zeitraum:<br>${r.from} bis ${r.to}<br><br>
+        Status:<br><b>${r.status}</b><br><br>
+        Kandidat:<br><b>${r.candidateName || "-"}</b><br><br>
+        <button onclick="findReplacement('${r.id}')">Vertretung suchen</button>
+        <button onclick="confirmReplacement('${r.id}')">Vertretung bestätigen</button>
+      </div>
+    `).join("")
   );
 }
 
@@ -999,7 +1057,9 @@ window.findReplacement = function (id) {
   const request = replacementRequests.find(r => r.id === id);
   if (!request) return;
 
-  const candidate = users.find(u => u.Rolle === "MITARBEITER" && u.User_ID !== request.sickUserId);
+  const candidate = users.find(
+    u => u.Rolle === "MITARBEITER" && u.User_ID !== request.sickUserId
+  );
 
   request.candidateId = candidate.User_ID;
   request.candidateName = `${candidate.Vorname} ${candidate.Nachname}`;
@@ -1008,7 +1068,18 @@ window.findReplacement = function (id) {
   saveAll();
   closeModal();
 
-  appModal("Vertretung gefunden", `Vorschlag:<br><b>${request.candidateName}</b><br><br>Objekt:<br>${request.objectName}`);
+  appModal(
+    "Vertretung gefunden",
+    `
+      <div class="info-card green">
+        <div class="card-title">Vorschlag</div>
+        ${request.candidateName}
+      </div>
+      <div class="info-card blue">
+        Objekt:<br>${request.objectName}
+      </div>
+    `
+  );
 };
 
 window.confirmReplacement = function (id) {
@@ -1020,6 +1091,7 @@ window.confirmReplacement = function (id) {
   }
 
   const shift = shifts.find(s => s.Shift_ID === request.shiftId);
+
   if (shift) {
     shift.Vertretung_ID = request.candidateId;
     shift.Status = "VERTRETUNG_GEFUNDEN";
@@ -1038,15 +1110,34 @@ window.confirmReplacement = function (id) {
   saveAll();
   closeModal();
 
-  appModal("Vertretung bestätigt", `Vertretung:<br><b>${request.candidateName}</b><br><br>Status:<br><b>BESTAETIGT</b>`);
+  appModal(
+    "Vertretung bestätigt",
+    `
+      <div class="info-card green">
+        <div class="card-title">Vertretung</div>
+        ${request.candidateName}
+      </div>
+      <div class="info-card blue">
+        Status:<br><b>BESTÄTIGT</b>
+      </div>
+    `
+  );
 };
 
 function showObjects() {
   appModal(
     "Objekte",
     objects.map(o =>
-      `Objekt:<br><b>${o.Name}</b><br><br>Adresse:<br>${o.Adresse}<br><br>Ansprechpartner:<br>${o.Ansprechpartner}<br><br>Telefon:<br>${o.Telefon}<br><br>ID:<br>${o.Objekt_ID}`
-    ).join("<hr>")
+      `
+      <div class="info-card blue">
+        <div class="card-title">${o.Name}</div>
+        Adresse: ${o.Adresse}<br>
+        Ansprechpartner: ${o.Ansprechpartner}<br>
+        Telefon: ${o.Telefon}<br>
+        ID: ${o.Objekt_ID}
+      </div>
+      `
+    ).join("")
   );
 }
 
@@ -1054,8 +1145,15 @@ function showUsers() {
   appModal(
     "Benutzer",
     users.map(u =>
-      `Name:<br><b>${u.Vorname} ${u.Nachname}</b><br><br>Rolle:<br>${u.Rolle}<br><br>E-Mail:<br>${u.Email}<br><br>Status:<br><b>${u.Aktiv}</b>`
-    ).join("<hr>")
+      `
+      <div class="info-card blue">
+        <div class="card-title">${u.Vorname} ${u.Nachname}</div>
+        Rolle: ${u.Rolle}<br>
+        E-Mail: ${u.Email}<br>
+        Status: <b>${u.Aktiv}</b>
+      </div>
+      `
+    ).join("")
   );
 }
 
@@ -1063,19 +1161,44 @@ function showHelp() {
   appModal(
     "Hilfe",
     `
-      Bei QR-Problemen Fallback nutzen.<br><br>
-      Bei Materialmangel Material melden.<br><br>
-      Bei neuer Vertretung Objektinfo, Putzplan und Gefahrenhinweise lesen.
+      <div class="info-card blue">
+        Bei QR-Problemen Fallback nutzen.
+      </div>
+      <div class="info-card green">
+        Bei neuer Vertretung: Objektinfo, Grundriss, Putzplan und Gefahrenhinweise lesen.
+      </div>
+      <div class="info-card yellow">
+        Vor Checkout: Müllpflicht und offene Hinweise prüfen.
+      </div>
     `
   );
 }
 
 function showCustomerStatus() {
-  appModal("Objektstatus", "Letzte Reinigung: heute<br>Status: abgeschlossen<br>Keine offenen Beschwerden.");
+  appModal(
+    "Objektstatus",
+    `
+      <div class="info-card green">
+        <div class="card-title">Letzte Reinigung</div>
+        Heute abgeschlossen
+      </div>
+      <div class="info-card blue">
+        Keine offenen Beschwerden.
+      </div>
+    `
+  );
 }
 
 function showCustomerNextCleaning() {
-  appModal("Nächste Reinigung", "Nächste geplante Reinigung:<br><b>morgen 07:00 Uhr</b>");
+  appModal(
+    "Nächste Reinigung",
+    `
+      <div class="info-card blue">
+        Nächste geplante Reinigung:<br>
+        <b>Morgen 07:00 Uhr</b>
+      </div>
+    `
+  );
 }
 
 function openCustomerMessage(type) {
@@ -1095,7 +1218,15 @@ window.submitCustomerMessage = function (type) {
   if (!message) return;
 
   closeModal();
-  appModal("Gesendet", `${type} wurde an den Objektleiter übermittelt.`);
+
+  appModal(
+    "Gesendet",
+    `
+      <div class="info-card green">
+        ${type} wurde an den Objektleiter übermittelt.
+      </div>
+    `
+  );
 };
 
 const savedUser = localStorage.getItem("facilityUser");
@@ -1104,4 +1235,6 @@ if (savedUser) {
   renderDashboard(JSON.parse(savedUser));
 } else {
   renderLogin();
+}
+  };
 }
