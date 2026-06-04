@@ -1,4 +1,4 @@
-import { googleSheets } from "./services/googleSheets.js";
+import { googleSheets } from "../services/googleSheets.js";
 
 export function getCustomerObjects(customerId) {
   if (!customerId) {
