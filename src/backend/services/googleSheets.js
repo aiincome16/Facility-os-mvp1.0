@@ -33,7 +33,10 @@ export class GoogleSheetsService {
     );
   }
 
-  filterByField(sheetName, field, value) {
+  filterByField(sheetName, field, value) }  
+  findAllByField(sheetName, field, value) {
+    return this.filterByField(sheetName, field, value);
+  }
     const rows = this.getSheet(sheetName);
 
     return rows.filter(
@@ -57,7 +60,9 @@ export class GoogleSheetsService {
     return row;
   }
 
-  updateRow(sheetName, idField, idValue, updates) {
+  updateRow(sheetName, idField, idValue, updates) {  updateByField(sheetName, field, value, updates) {
+    return this.updateRow(sheetName, field, value, updates);
+  }
     const rows = this.getSheet(sheetName);
 
     const index = rows.findIndex((row) => row && row[idField] === idValue);
@@ -74,7 +79,9 @@ export class GoogleSheetsService {
     return this.sheets[sheetName][index];
   }
 
-  deleteRow(sheetName, idField, idValue) {
+  deleteRow(sheetName, idField, idValue) {  deleteByField(sheetName, field, value) {
+    return this.deleteRow(sheetName, field, value);
+  }
     const rows = this.getSheet(sheetName);
 
     const index = rows.findIndex((row) => row && row[idField] === idValue);
