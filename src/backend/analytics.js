@@ -1,4 +1,4 @@
-import { googleSheets } from "./services/googleSheets.js";
+import { googleSheets } from "../services/googleSheets.js";
 
 function toNumber(value) {
   const number = Number(value);
