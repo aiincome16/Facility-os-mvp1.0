@@ -1,5 +1,5 @@
-import { googleSheets } from "./services/googleSheets.js";
-import { safeLowercase } from "./utils/helpers.js";
+import { googleSheets } from "../services/googleSheets.js";
+import { safeLowercase } from "../utils/helpers.js";
 
 export function findQRCode(qrId) {
   if (!qrId) return null;
