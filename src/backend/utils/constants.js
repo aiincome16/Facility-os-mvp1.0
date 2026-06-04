@@ -1,0 +1,38 @@
+export const APP_NAME = "Facility-OS";
+export const APP_VERSION = "1.0";
+
+export const USER_ROLES = {
+  ADMIN: "ADMIN",
+  OBJEKTLEITER: "OBJEKTLEITER",
+  MITARBEITER: "MITARBEITER",
+  KUNDE: "KUNDE"
+};
+
+export const SHIFT_STATUS = {
+  GEPLANT: "GEPLANT",
+  GESTARTET: "GESTARTET",
+  ABGESCHLOSSEN: "ABGESCHLOSSEN"
+};
+
+export const REQUEST_STATUS = {
+  OFFEN: "OFFEN",
+  ANGEFRAGT: "ANGEFRAGT",
+  ANGENOMMEN: "ANGENOMMEN",
+  ABGELEHNT: "ABGELEHNT",
+  ERLEDIGT: "ERLEDIGT",
+  BESTAETIGT: "BESTÄTIGT"
+};
+
+export const PRIORITY = {
+  NIEDRIG: "NIEDRIG",
+  NORMAL: "NORMAL",
+  HOCH: "HOCH"
+};
+
+export const SCORE_STATUS = {
+  GRUEN: "GRUEN",
+  GELB: "GELB",
+  ROT: "ROT"
+};
+
+export const GPS_DEFAULT_RADIUS = 100;
