@@ -1,4 +1,4 @@
-import { googleSheets } from "./services/googleSheets.js";
+import { googleSheets } from "../services/googleSheets.js";
 import { safeLowercase } from "./utils/helpers.js";
 
 export function findUserByEmail(email) {
