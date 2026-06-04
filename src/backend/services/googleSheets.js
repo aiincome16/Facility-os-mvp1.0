@@ -33,10 +33,7 @@ export class GoogleSheetsService {
     );
   }
 
-  filterByField(sheetName, field, value) }  
-  findAllByField(sheetName, field, value) {
-    return this.filterByField(sheetName, field, value);
-  }
+  filterByField(sheetName, field, value) {
     const rows = this.getSheet(sheetName);
 
     return rows.filter(
@@ -44,6 +41,10 @@ export class GoogleSheetsService {
         row &&
         safeLowercase(row[field]) === safeLowercase(value)
     );
+  }
+
+  findAllByField(sheetName, field, value) {
+    return this.filterByField(sheetName, field, value);
   }
 
   insertRow(sheetName, row) {
@@ -57,15 +58,20 @@ export class GoogleSheetsService {
 
     this.sheets[sheetName].push(row);
 
-    return row;
+    return {
+      success: true,
+      row
+    };
   }
 
-  updateRow(sheetName, idField, idValue, updates) {  updateByField(sheetName, field, value, updates) {
-    return this.updateRow(sheetName, field, value, updates);
-  }
+  updateRow(sheetName, idField, idValue, updates) {
     const rows = this.getSheet(sheetName);
 
-    const index = rows.findIndex((row) => row && row[idField] === idValue);
+    const index = rows.findIndex(
+      (row) =>
+        row &&
+        safeLowercase(row[idField]) === safeLowercase(idValue)
+    );
 
     if (index === -1) {
       return null;
@@ -79,20 +85,63 @@ export class GoogleSheetsService {
     return this.sheets[sheetName][index];
   }
 
-  deleteRow(sheetName, idField, idValue) {  deleteByField(sheetName, field, value) {
-    return this.deleteRow(sheetName, field, value);
+  updateByField(sheetName, field, value, updates) {
+    const row = this.updateRow(
+      sheetName,
+      field,
+      value,
+      updates
+    );
+
+    if (!row) {
+      return {
+        success: false,
+        message: "Datensatz nicht gefunden"
+      };
+    }
+
+    return {
+      success: true,
+      row
+    };
   }
+
+  deleteRow(sheetName, idField, idValue) {
     const rows = this.getSheet(sheetName);
 
-    const index = rows.findIndex((row) => row && row[idField] === idValue);
+    const index = rows.findIndex(
+      (row) =>
+        row &&
+        safeLowercase(row[idField]) === safeLowercase(idValue)
+    );
 
     if (index === -1) {
       return false;
     }
 
-    rows.splice(index, 1);
+    this.sheets[sheetName].splice(index, 1);
 
     return true;
+  }
+
+  deleteByField(sheetName, field, value) {
+    const deleted = this.deleteRow(
+      sheetName,
+      field,
+      value
+    );
+
+    return {
+      success: deleted
+    };
+  }
+
+  reset() {
+    this.sheets = {};
+
+    return {
+      success: true
+    };
   }
 }
 
