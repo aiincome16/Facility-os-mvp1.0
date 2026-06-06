@@ -22,19 +22,25 @@ Digitales Facility-Management-System für Reinigungsunternehmen.
 
 ## Architektur
 
-Frontend:
+### Frontend
 - HTML
 - CSS
 - JavaScript
 
-Backend:
+### Backend
+- JavaScript-Module in src/backend
+
+### Datenhaltung (aktueller Stand)
+- Demo-Daten in JavaScript
+- vorbereitete Google-Sheets-Struktur
+
+### Geplante Live-Anbindung
 - Google Apps Script
-
-Datenbank:
 - Google Sheets
+- Google Drive für Bilder, Videos und PDFs
 
-Version:
-1.0
-
-Copyright (c) 2026 Kristin Rabener
-All rights reserved.
+### Langfristige Ziele
+- Mehrmandantenfähigkeit
+- White-Label-Unterstützung
+- KI-Module
+- PWA und App-Version
