@@ -17,3 +17,5 @@ document.getElementById("app").innerHTML = `
 
 bindModalEvents();
 showToast("Toast funktioniert", "SUCCESS");
+bindModalEvents();
+showToast("Toast funktioniert", "SUCCESS");
