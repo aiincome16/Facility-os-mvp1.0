@@ -4,12 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Facility-OS</title>
-  <!-- <link rel="stylesheet" href="./style.css"> -->
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
   <div id="app"></div>
 
-  <script type="module" src="./app.js?v=219"></script>
+  <div id="qrOverlay" class="overlay hidden">
+    <div class="overlay-card">
+      <h2>QR-Code scannen</h2>
+      <div id="qrReader"></div>
+
+      <div class="button-row">
+        <button id="manualQrBtn" class="btn secondary">Manuell eingeben</button>
+        <button id="closeQrBtn" class="btn danger">Zurück</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalOverlay" class="overlay hidden">
+    <div class="overlay-card modal-card">
+      <h2 id="modalTitle">Facility-OS</h2>
+      <div id="modalContent"></div>
+      <div id="modalActions" class="button-stack"></div>
+      <button id="modalCloseBtn" class="btn secondary">Schließen</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="./app.js?v=401"></script>
 </body>
 </html>
-<script src="./app.js?v=400"></script>
