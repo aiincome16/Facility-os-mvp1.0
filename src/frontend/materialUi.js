@@ -122,11 +122,25 @@ function saveManualMaterialReport() {
 }
 
 export function bindMaterialEvents() {
-  document
-    .getElementById("btnMaterial")
-    ?.addEventListener("click", showMaterialPhotoDialog);
 
-  document
-    .getElementById("btnOrders")
-    ?.addEventListener("click", showMaterialReports);
+  const materialButton =
+    document.getElementById("btnMaterial");
+
+  if (materialButton) {
+    materialButton.addEventListener(
+      "click",
+      showMaterialPhotoDialog
+    );
+  }
+
+  const ordersButton =
+    document.getElementById("btnOrders");
+
+  if (ordersButton) {
+    ordersButton.addEventListener(
+      "click",
+      showMaterialReports
+    );
+  }
+
 }
