@@ -6,7 +6,8 @@ import { bindShiftEvents } from "./shiftUi.js";
 import { bindObjectEvents } from "./objectUi.js";
 import { bindRoomEvents } from "./roomUi.js";
 import { bindNotificationEvents } from "./notificationUi.js";
-import { bindMaterialEvents } from "./materialUi.js";
+// bindMaterialEvents();
+
 document.getElementById("app").innerHTML = `
   <div class="app-shell">
     <div class="header-card">
