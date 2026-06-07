@@ -5,12 +5,13 @@ import { bindQrEvents } from "./qrUi.js";
 import { bindShiftEvents } from "./shiftUi.js";
 import { bindObjectEvents } from "./objectUi.js";
 import { bindRoomEvents } from "./roomUi.js";
+import { bindNotificationEvents } from "./notificationUi.js";
 
 document.getElementById("app").innerHTML = `
   <div class="app-shell">
     <div class="header-card">
       <h1>Facility-OS</h1>
-      <p>Test Room Import</p>
+      <p>Test Notification Import</p>
     </div>
 
     <div class="section-card">
@@ -23,7 +24,7 @@ bindModalEvents();
 bindQrEvents();
 bindShiftEvents();
 bindObjectEvents();
-bindRoomEvents();
+bindRoomEvents();bindNotificationEvents();
 
 showToast(
   "Room Import funktioniert",
