@@ -102,3 +102,26 @@ export function bindRoomEvents() {
     .getElementById("btnCleaningPlan")
     ?.addEventListener("click", showCleaningPlan);
 }
+export function bindRoomEvents() {
+
+  const btnRooms =
+    document.getElementById("btnRooms");
+
+  if (btnRooms) {
+    btnRooms.addEventListener(
+      "click",
+      showRooms
+    );
+  }
+
+  const btnCleaningPlan =
+    document.getElementById("btnCleaningPlan");
+
+  if (btnCleaningPlan) {
+    btnCleaningPlan.addEventListener(
+      "click",
+      showCleaningPlan
+    );
+  }
+
+}
