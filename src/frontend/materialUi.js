@@ -3,107 +3,130 @@ import { openModal } from "./modalUi.js";
 import { showToast } from "./toastUi.js";
 
 export function showMaterialReports() {
-  const reports =
-    appState.materialOrders || [];
+  const reports = appState.materialOrders || [];
 
   openModal({
     title: "Material",
     content: reports.length
-      ? reports
-          .map(formatMaterialCard)
-          .join("")
-      :       <div class="info-card">         Keine Materialmeldungen vorhanden.       </div>    
+      ? reports.map(formatMaterialCard).join("")
+      : `<div class="info-card">Keine Materialmeldungen vorhanden.</div>`
   });
-
-  reports.forEach((report) => {
-
-    document
-      .getElementById(
-        material-${report.Order_ID}
-      )
-      ?.addEventListener(
-        "click",
-        () => showMaterialDetails(report)
-      );
-
-  });
-
 }
 
 function formatMaterialCard(report) {
+  return `
+    <div class="info-card green">
+      <div class="card-title">
+        ${report.Material || "Material"}
+      </div>
 
-  return     <button       id="material-${report.Order_ID}"       class="info-card green"     >        <div class="card-title">         ${report.Material || "Material"}       </div>        Menge:       ${report.Menge || "-"}       ${report.Einheit || ""}        <br><br>        Status:       ${report.Status || "-"}      </button>  ;
-
-}
-
-export function showMaterialDetails(report) {
-
-  openModal({
-    title:
-      report.Material || "Material",
-
-    content:       <div class="info-card blue">          <div class="card-title">           Menge         </div>          ${report.Menge || "-"}         ${report.Einheit || ""}        </div>        <div class="info-card yellow">          <div class="card-title">           Status         </div>          ${report.Status || "-"}        </div>        <div class="info-card">          <div class="card-title">           Notiz         </div>          ${report.Notiz || "-"}        </div>     
-  });
-
+      Menge: ${report.Menge || "-"} ${report.Einheit || ""}<br>
+      Status: ${report.Status || "-"}
+    </div>
+  `;
 }
 
 export function showMaterialPhotoDialog() {
-
   openModal({
+    title: "Material melden",
+    content: `
+      <div class="info-card">
+        Material per Foto oder manuell melden.
+      </div>
 
-    title:
-      "Material melden",
+      <button id="btnPhotoMaterial" class="btn green">
+        Foto aufnehmen
+      </button>
 
-    content:        <div class="info-card">          Foto aufnehmen oder         Material manuell melden.        </div>        <button         id="btnPhotoMaterial"         class="btn green"       >          Foto aufnehmen        </button>        <br><br>        <button         id="btnManualMaterial"         class="btn blue"       >          Manuell eingeben        </button>     
-
+      <button id="btnManualMaterial" class="btn blue">
+        Manuell eingeben
+      </button>
+    `
   });
 
+  document
+    .getElementById("btnPhotoMaterial")
+    ?.addEventListener("click", () => {
+      showToast("Foto-Funktion folgt", "INFO");
+    });
+
+  document
+    .getElementById("btnManualMaterial")
+    ?.addEventListener("click", createManualMaterialReport);
 }
 
 export function showMaterialSuggestions() {
-
-  const suggestions =
-    appState.materialSuggestions || [];
+  const suggestions = appState.materialSuggestions || [];
 
   openModal({
-
-    title:
-      "KI-Vorschläge",
-
-    content:
-
-      suggestions.length
-
-        ? suggestions
-            .map(
-              suggestion =>                 <div class="info-card orange">                    <div class="card-title">                      ${suggestion.material}                    </div>                    Vorschlag:                    ${suggestion.quantity}                   ${suggestion.unit}                  </div>              
-            )
-            .join("")
-
-        :            <div class="info-card">              Keine Vorschläge vorhanden.            </div>         
-
+    title: "KI-Vorschläge",
+    content: suggestions.length
+      ? suggestions.map((suggestion) => `
+          <div class="info-card orange">
+            <div class="card-title">${suggestion.material || "Material"}</div>
+            Vorschlag: ${suggestion.quantity || "-"} ${suggestion.unit || ""}
+          </div>
+        `).join("")
+      : `<div class="info-card">Keine Vorschläge vorhanden.</div>`
   });
-
 }
 
 export function createManualMaterialReport() {
+  openModal({
+    title: "Material manuell melden",
+    content: `
+      <label>Material</label>
+      <input id="materialName" placeholder="z. B. SR11, Müllbeutel, Papier">
 
-  showToast(
-    "Manuelle Materialmeldung folgt",
-    "INFO"
-  );
+      <label>Menge</label>
+      <input id="materialAmount" placeholder="z. B. 5">
 
+      <label>Einheit</label>
+      <input id="materialUnit" placeholder="z. B. Liter, Stück, Rollen">
+
+      <label>Notiz</label>
+      <textarea id="materialNote" placeholder="Hinweis"></textarea>
+    `,
+    actions: [
+      {
+        label: "Speichern",
+        className: "btn green",
+        onClick: saveManualMaterialReport
+      }
+    ]
+  });
+}
+
+function saveManualMaterialReport() {
+  const material = document.getElementById("materialName")?.value.trim();
+  const amount = document.getElementById("materialAmount")?.value.trim();
+  const unit = document.getElementById("materialUnit")?.value.trim();
+  const note = document.getElementById("materialNote")?.value.trim();
+
+  if (!material) {
+    showToast("Material fehlt", "ERROR");
+    return;
+  }
+
+  appState.materialOrders.push({
+    Order_ID: `MAT-${Date.now()}`,
+    Material: material,
+    Menge: amount,
+    Einheit: unit,
+    Notiz: note,
+    Status: "OFFEN"
+  });
+
+  showToast("Materialmeldung gespeichert", "SUCCESS");
+  showMaterialReports();
 }
 
 export function bindMaterialEvents() {
+  document
+    .getElementById("btnMaterial")
+    ?.addEventListener("click", showMaterialPhotoDialog);
 
   document
-    .getElementById(
-      "btnMaterial"
-    )
-    ?.addEventListener(
-      "click",
-      showMaterialPhotoDialog
-    );
-
+    .getElementById("btnOrders")
+    ?.addEventListener("click", showMaterialReports);
 }
