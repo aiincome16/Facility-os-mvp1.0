@@ -6,7 +6,7 @@ import { bindShiftEvents } from "./shiftUi.js";
 import { bindObjectEvents } from "./objectUi.js";
 import { bindRoomEvents } from "./roomUi.js";
 import { bindNotificationEvents } from "./notificationUi.js";
-
+import { bindMaterialEvents } from "./materialUi.js";
 document.getElementById("app").innerHTML = `
   <div class="app-shell">
     <div class="header-card">
@@ -24,7 +24,9 @@ bindModalEvents();
 bindQrEvents();
 bindShiftEvents();
 bindObjectEvents();
-bindRoomEvents();bindNotificationEvents();
+bindRoomEvents();
+bindNotificationEvents();
+bindMaterialEvents();
 
 showToast(
   "Room Import funktioniert",
