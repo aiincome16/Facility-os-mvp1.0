@@ -27,3 +27,16 @@
 2.0 Produktivbetrieb
 
 3.0 SaaS-Version
+
+## Version 1.0
+
+Datum: 20.05.2026
+
+Status:
+Eingefroren
+
+Beschreibung:
+Erste lauffähige Version mit Grundfunktionen und internem Praxistest.
+
+Nachfolger:
+Version 1.1 – Praxisoptimierung
