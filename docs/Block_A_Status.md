@@ -49,4 +49,5 @@ Block A
 ✅ Grundversion fertig
 
 ## qrService
-⬜ begonnen
+
+✅ Grundversion fertig
