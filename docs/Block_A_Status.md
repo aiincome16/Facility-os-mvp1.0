@@ -45,9 +45,10 @@ Block A
 ⬜ nicht abgeschlossen
 
 ## gpsService
-
 ✅ Grundversion fertig
 
 ## qrService
-
 ✅ Grundversion fertig
+
+## shiftService
+⬜ begonnen
