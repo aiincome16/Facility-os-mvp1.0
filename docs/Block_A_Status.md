@@ -20,10 +20,6 @@ QR-System
 
 ⬜ offen
 
-gpsService
-
-✅ Grundversion fertig
-
 GPS-Prüfung
 
 ⬜ offen
@@ -47,3 +43,10 @@ Manueller Code
 Block A
 
 ⬜ nicht abgeschlossen
+
+## gpsService
+
+✅ Grundversion fertig
+
+## qrService
+⬜ begonnen
