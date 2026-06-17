@@ -20,6 +20,9 @@ QR-System
 
 ⬜ offen
 
+gpsService
+✅ Grundversion fertig
+
 GPS-Prüfung
 
 ⬜ offen
