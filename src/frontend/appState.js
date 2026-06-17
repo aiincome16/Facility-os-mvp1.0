@@ -4,9 +4,21 @@ export const appState = {
   currentUser: null,
 
   // Objekt
-  currentObject: null,
-  currentRoom: null,
-  currentShift: null,
+  // Objekt
+currentObject: null,
+currentRoom: null,
+currentShift: null,
+
+shiftStarted: false,
+
+qrValidated: false,
+
+gpsValidated: false,
+
+mandatoryMessagesConfirmed: false,
+
+// Tickets
+tickets: [],
 
   // Tickets
   tickets: [],
