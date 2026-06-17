@@ -14,7 +14,7 @@ dailyControlUi.js
 
 appState Erweiterung
 
-⬜ offen
+✅ abgeschlossen
 
 QR-System
 
