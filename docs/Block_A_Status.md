@@ -51,4 +51,4 @@ Block A
 ✅ Grundversion fertig
 
 ## shiftService
-⬜ begonnen
+✅ Grundversion fertig
