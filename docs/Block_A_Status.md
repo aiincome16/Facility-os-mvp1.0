@@ -1,22 +1,22 @@
 Block A Status
 
-Architektur
+## Architektur
 
 ✅ abgeschlossen
 
-Dateistruktur
+## Dateistruktur
 
 ✅ abgeschlossen
 
-dailyControlUi.js
+## dailyControlUi.js
 
 ✅ Grundversion fertig
 
-appState Erweiterung
+## appState Erweiterung
 
 ✅ abgeschlossen
 
-QR-System
+## QR-System
 
 ⬜ offen
 
