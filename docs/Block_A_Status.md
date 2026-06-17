@@ -52,3 +52,6 @@ Block A
 
 ## shiftService
 ✅ Grundversion fertig
+
+## notificationService
+✅ Grundversion fertig
