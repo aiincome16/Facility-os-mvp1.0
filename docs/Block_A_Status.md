@@ -28,9 +28,8 @@ Arbeitsbeginn
 
 ⬜ offen
 
-Pflichtmeldungen
-
-⬜ offen
+## Pflichtmeldungen
+✅ Grundversion fertig
 
 Tagessteuerung
 
