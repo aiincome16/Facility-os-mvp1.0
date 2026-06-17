@@ -10,7 +10,7 @@ Dateistruktur
 
 dailyControlUi.js
 
-⬜ begonnen
+✅ Grundversion fertig
 
 appState Erweiterung
 
