@@ -1,0 +1,26 @@
+[
+  {
+    "Shift_ID": "SHIFT-001",
+    "Mitarbeiter_ID": "USR-002",
+    "Objekt_ID": "OBJ-3707",
+    "Objekt_Name": "Gustav Wolf Nebra",
+    "Datum": "2026-05-29",
+    "Startzeit": "07:00",
+    "Endzeit": "09:00",
+    "Status": "GEPLANT",
+    "Checkin_Zeit": "",
+    "Checkout_Zeit": ""
+  },
+  {
+    "Shift_ID": "SHIFT-002",
+    "Mitarbeiter_ID": "USR-003",
+    "Objekt_ID": "OBJ-MOBAU",
+    "Objekt_Name": "Mobau Eisleben",
+    "Datum": "2026-05-28",
+    "Startzeit": "17:30",
+    "Endzeit": "19:30",
+    "Status": "GEPLANT",
+    "Checkin_Zeit": "",
+    "Checkout_Zeit": ""
+  }
+]
