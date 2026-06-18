@@ -57,3 +57,6 @@ Block A
 
 ## notificationService
 ✅ Grundversion fertig
+
+## QR-Oberfläche
+✅ mit checkinService verbunden
