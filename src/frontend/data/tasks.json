@@ -1,0 +1,52 @@
+[
+  {
+    "Task_ID": "TASK-001",
+    "Raum_ID": "ROOM-3707-HWC",
+    "Bereich": "WC",
+    "Aufgabe": "WC reinigen",
+    "Material": "Powerfix Gel / SR11 nach Vorgabe",
+    "Anleitung": "Nur im WC verwenden. Einwirken lassen, bürsten, nachspülen.",
+    "Warnung": "Powerfix niemals auf Armaturen verwenden.",
+    "Kontrolle": "WC sauber, keine Rückstände, Geruch neutral."
+  },
+  {
+    "Task_ID": "TASK-002",
+    "Raum_ID": "ROOM-3707-HWC",
+    "Bereich": "Waschbecken",
+    "Aufgabe": "Waschbecken und Armaturen reinigen",
+    "Material": "KO33, bei Kalk SR11 gezielt",
+    "Anleitung": "Feucht reinigen. Armaturen trocken nachwischen.",
+    "Warnung": "Powerfix greift Armaturen an.",
+    "Kontrolle": "Keine Wasserflecken, keine Kalkränder."
+  },
+  {
+    "Task_ID": "TASK-003",
+    "Raum_ID": "ROOM-3707-HWC",
+    "Bereich": "Boden",
+    "Aufgabe": "Boden wischen",
+    "Material": "Veriprop / Turbo bei starker Verschmutzung",
+    "Anleitung": "Nass wischen und trocken nachwischen.",
+    "Warnung": "Nasse Bereiche absichern.",
+    "Kontrolle": "Boden sauber und trocken."
+  },
+  {
+    "Task_ID": "TASK-004",
+    "Raum_ID": "ROOM-MOBAU-WC-H",
+    "Bereich": "Sanitär",
+    "Aufgabe": "WC, Pissoir, Waschbecken und Dusche reinigen",
+    "Material": "SR11, KO33, Powerfix nur WC",
+    "Anleitung": "Sanitär reinigen. Armaturen nur mit geeignetem Mittel behandeln.",
+    "Warnung": "Powerfix nicht auf Armaturen.",
+    "Kontrolle": "Sanitär sauber, keine sichtbaren Rückstände."
+  },
+  {
+    "Task_ID": "TASK-005",
+    "Raum_ID": "ROOM-MOBAU-VERKAUF",
+    "Bereich": "Boden",
+    "Aufgabe": "Verkaufshalle und Ausstellung wischen",
+    "Material": "Veriprop / Turbo bei Bedarf",
+    "Anleitung": "Boden nass wischen.",
+    "Warnung": "Kein Trockenwischen bei Mobau.",
+    "Kontrolle": "Boden sichtbar sauber."
+  }
+]
