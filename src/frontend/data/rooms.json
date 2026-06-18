@@ -1,0 +1,47 @@
+[
+  {
+    "Raum_ID": "ROOM-3707-HWC",
+    "Objekt_ID": "OBJ-3707",
+    "Bereich": "UG",
+    "Raumname": "Herren-WC",
+    "Intervall": "5x wöchentlich",
+    "Sollzeit": "20",
+    "Prioritaet": "HOCH"
+  },
+  {
+    "Raum_ID": "ROOM-3707-DUSCHE",
+    "Objekt_ID": "OBJ-3707",
+    "Bereich": "UG",
+    "Raumname": "Duschen Herren",
+    "Intervall": "5x wöchentlich",
+    "Sollzeit": "18",
+    "Prioritaet": "HOCH"
+  },
+  {
+    "Raum_ID": "ROOM-3707-UMKLEIDE",
+    "Objekt_ID": "OBJ-3707",
+    "Bereich": "UG",
+    "Raumname": "Umkleiden",
+    "Intervall": "5x wöchentlich",
+    "Sollzeit": "25",
+    "Prioritaet": "NORMAL"
+  },
+  {
+    "Raum_ID": "ROOM-MOBAU-WC-H",
+    "Objekt_ID": "OBJ-MOBAU",
+    "Bereich": "Sanitär",
+    "Raumname": "Männer-WC mit Dusche",
+    "Intervall": "Dienstag und Donnerstag",
+    "Sollzeit": "25",
+    "Prioritaet": "HOCH"
+  },
+  {
+    "Raum_ID": "ROOM-MOBAU-VERKAUF",
+    "Objekt_ID": "OBJ-MOBAU",
+    "Bereich": "Verkauf",
+    "Raumname": "Verkaufshalle / Ausstellung",
+    "Intervall": "Dienstag und Donnerstag",
+    "Sollzeit": "45",
+    "Prioritaet": "NORMAL"
+  }
+]
