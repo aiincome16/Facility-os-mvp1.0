@@ -47,12 +47,16 @@ export function showDailyControl() {
         </button>
 
         <button id="btnDailyTickets" class="btn yellow">
-          Offene Punkte
-        </button>
+  Offene Punkte
+</button>
 
-        <button id="btnDailyCheckout" class="btn blue">
-          Arbeitsende
-        </button>
+<button id="btnDailyContinue" class="btn green">
+  Arbeit beginnen
+</button>
+
+<button id="btnDailyCheckout" class="btn blue">
+  Arbeitsende
+</button>
       </div>
     `
   });
