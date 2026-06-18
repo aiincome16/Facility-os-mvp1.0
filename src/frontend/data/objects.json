@@ -1,0 +1,30 @@
+[
+  {
+    "Objekt_ID": "OBJ-3707",
+    "Name": "Gustav Wolf Nebra",
+    "Adresse": "Am Bahnhof 1A, 06642 Nebra",
+    "QR_Code": "QR-GUSTAV-WOLF-NEBRA",
+    "Latitude": 51.288,
+    "Longitude": 11.575,
+    "GPS_Radius": 150,
+    "GPS_Aktiv": "JA",
+    "Zugang": "Schlüssel für Putzraum vorhanden.",
+    "Schluessel": "Schlüssel bei Mitarbeiterin.",
+    "Besonderheiten": "Tägliche Bereiche im UG und Produktion. Büros wöchentlich. Nass und trocken nachwischen.",
+    "Schliesshinweis": "Nach Abschluss alle genutzten Bereiche kontrollieren."
+  },
+  {
+    "Objekt_ID": "OBJ-MOBAU",
+    "Name": "Mobau Eisleben",
+    "Adresse": "Querfurter Str. 6, 06295 Eisleben",
+    "QR_Code": "QR-MOBAU",
+    "Latitude": 51.522,
+    "Longitude": 11.548,
+    "GPS_Radius": 150,
+    "GPS_Aktiv": "JA",
+    "Zugang": "Dienstag und Donnerstag ab 17:30 Uhr.",
+    "Schluessel": "Schlüssel bei Mitarbeiterin.",
+    "Besonderheiten": "Boden nur nass wischen. Kein Trockenwischen. Müll in großen Container mit schwarzem Deckel.",
+    "Schliesshinweis": "Tür vom Ausstellungsraum Richtung Toilette/Umkleide verschließen. Drei Schalter im Stromkasten runter. Licht aus."
+  }
+]
