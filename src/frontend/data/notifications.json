@@ -1,0 +1,11 @@
+[
+  {
+    "Message_ID": "MSG-001",
+    "Typ": "KUNDENWUNSCH",
+    "Titel": "Zusatzaufgabe bei Gustav Wolf",
+    "Nachricht": "Bitte heute Waschbecken im Herren-WC besonders auf Kalk prüfen.",
+    "Prioritaet": "HOCH",
+    "Status": "OFFEN",
+    "Gelesen": "NEIN"
+  }
+]
