@@ -1,0 +1,11 @@
+[
+  {
+    "Request_ID": "REQ-001",
+    "Objekt_ID": "OBJ-3707",
+    "Titel": "Waschbecken besonders prüfen",
+    "Beschreibung": "Kalk am Waschbecken kontrollieren.",
+    "Fotopflicht": "NEIN",
+    "Abrechnungsrelevant": "NEIN",
+    "Status": "OFFEN"
+  }
+]
