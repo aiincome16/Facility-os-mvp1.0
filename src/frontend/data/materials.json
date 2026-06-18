@@ -1,0 +1,30 @@
+[
+  {
+    "Name": "SR11",
+    "Gefahr": "Verursacht schwere Verätzungen und Augenschäden.",
+    "Dosierung": "10–50 ml / 10 Liter",
+    "Anwendung": "Gegen Kalk und Sanitärverschmutzungen",
+    "Warnung": "Handschuhe tragen. Nicht mischen."
+  },
+  {
+    "Name": "KO33",
+    "Gefahr": "Bei sachgemäßer Anwendung keine bedeutende Gefahr.",
+    "Dosierung": "40–100 ml / 10 Liter",
+    "Anwendung": "Oberflächen, Spiegel, Armaturen",
+    "Warnung": "Nicht direkt auf empfindliche Flächen sprühen."
+  },
+  {
+    "Name": "Veriprop",
+    "Gefahr": "Kontakt mit Augen vermeiden.",
+    "Dosierung": "40 ml / 8 Liter",
+    "Anwendung": "Boden-Unterhaltsreinigung",
+    "Warnung": "Rutschgefahr bei nassem Boden."
+  },
+  {
+    "Name": "Powerfix Gel",
+    "Gefahr": "Nur WC. Nicht auf Armaturen verwenden.",
+    "Dosierung": "Unverdünnt im WC",
+    "Anwendung": "WC und Urinal",
+    "Warnung": "Greift Armaturen an."
+  }
+]
