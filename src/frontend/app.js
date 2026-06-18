@@ -1,379 +1,9 @@
-const appState = {
-  currentUser: null,
-  currentObject: null,
-  currentRoom: null,
-  currentShift: null,
-  notifications: [],
-  tickets: [],
-  customerRequests: [],
-  complaints: [],
-  materialOrders: [],
-  replacementRequests: [],
-  aiWarnings: [],
-  analytics: [],
-  helpLevel: 1,
-  guidedMode: false
-};
-
-const users = [
-  {
-    User_ID: "USR-001",
-    Vorname: "Kristin",
-    Nachname: "Rabener",
-    Rolle: "ADMIN",
-    Email: "allrountin@gmail.com",
-    Passwort: "Test123!",
-    Wohnort: "Eisleben",
-    Auto: "JA",
-    Score: 95,
-    Objektkenntnis: "JA",
-    Hilfestufe: 1,
-    Aktiv: "JA"
-  },
-  {
-    User_ID: "USR-002",
-    Vorname: "Anna",
-    Nachname: "Becker",
-    Rolle: "MITARBEITER",
-    Email: "anna@test.de",
-    Passwort: "Test123!",
-    Wohnort: "Nebra",
-    Auto: "JA",
-    Score: 96,
-    Objektkenntnis: "JA",
-    Hilfestufe: 1,
-    Aktiv: "JA"
-  },
-  {
-    User_ID: "USR-003",
-    Vorname: "Lisa",
-    Nachname: "Schneider",
-    Rolle: "MITARBEITER",
-    Email: "lisa@test.de",
-    Passwort: "Test123!",
-    Wohnort: "Eisleben",
-    Auto: "JA",
-    Score: 88,
-    Objektkenntnis: "JA",
-    Hilfestufe: 1,
-    Aktiv: "JA"
-  },
-  {
-    User_ID: "USR-004",
-    Vorname: "Kevin",
-    Nachname: "Müller",
-    Rolle: "MITARBEITER",
-    Email: "kevin@test.de",
-    Passwort: "Test123!",
-    Wohnort: "Querfurt",
-    Auto: "NEIN",
-    Score: 42,
-    Objektkenntnis: "NEIN",
-    Hilfestufe: 4,
-    Aktiv: "JA"
-  },
-  {
-    User_ID: "USR-005",
-    Vorname: "Sarah",
-    Nachname: "Mueller",
-    Rolle: "OBJEKTLEITER",
-    Email: "sarah@test.de",
-    Passwort: "Test123!",
-    Wohnort: "Halle",
-    Auto: "JA",
-    Score: 90,
-    Objektkenntnis: "JA",
-    Hilfestufe: 2,
-    Aktiv: "JA"
-  },
-  {
-    User_ID: "USR-006",
-    Vorname: "Mobau",
-    Nachname: "Kunde",
-    Rolle: "KUNDE",
-    Email: "kunde@test.de",
-    Passwort: "Test123!",
-    Aktiv: "JA"
-  }
-];
-
-const objects = [
-  {
-    Objekt_ID: "OBJ-3707",
-    Name: "Gustav Wolf Nebra",
-    Adresse: "Am Bahnhof 1A, 06642 Nebra",
-    QR_Code: "QR-GUSTAV-WOLF-NEBRA",
-    GPS_Aktiv: "JA",
-    Zugang: "Schlüssel für Putzraum vorhanden.",
-    Schluessel: "Schlüssel bei Mitarbeiterin.",
-    Besonderheiten: "Tägliche Bereiche im UG und Produktion. Büros wöchentlich. Nass und trocken nachwischen.",
-    Schliesshinweis: "Nach Abschluss alle genutzten Bereiche kontrollieren."
-  },
-  {
-    Objekt_ID: "OBJ-MOBAU",
-    Name: "Mobau Eisleben",
-    Adresse: "Querfurter Str. 6, 06295 Eisleben",
-    QR_Code: "QR-MOBAU",
-    GPS_Aktiv: "JA",
-    Zugang: "Dienstag und Donnerstag ab 17:30 Uhr.",
-    Schluessel: "Schlüssel bei Mitarbeiterin.",
-    Besonderheiten: "Boden nur nass wischen. Kein Trockenwischen. Müll in großen Container mit schwarzem Deckel.",
-    Schliesshinweis: "Tür vom Ausstellungsraum Richtung Toilette/Umkleide verschließen. Drei Schalter im Stromkasten runter. Licht aus."
-  }
-];
-
-const rooms = [
-  {
-    Raum_ID: "ROOM-3707-HWC",
-    Objekt_ID: "OBJ-3707",
-    Bereich: "UG",
-    Raumname: "Herren-WC",
-    Intervall: "5x wöchentlich",
-    Sollzeit: "20",
-    Prioritaet: "HOCH"
-  },
-  {
-    Raum_ID: "ROOM-3707-DUSCHE",
-    Objekt_ID: "OBJ-3707",
-    Bereich: "UG",
-    Raumname: "Duschen Herren",
-    Intervall: "5x wöchentlich",
-    Sollzeit: "18",
-    Prioritaet: "HOCH"
-  },
-  {
-    Raum_ID: "ROOM-3707-UMKLEIDE",
-    Objekt_ID: "OBJ-3707",
-    Bereich: "UG",
-    Raumname: "Umkleiden",
-    Intervall: "5x wöchentlich",
-    Sollzeit: "25",
-    Prioritaet: "NORMAL"
-  },
-  {
-    Raum_ID: "ROOM-MOBAU-WC-H",
-    Objekt_ID: "OBJ-MOBAU",
-    Bereich: "Sanitär",
-    Raumname: "Männer-WC mit Dusche",
-    Intervall: "Dienstag und Donnerstag",
-    Sollzeit: "25",
-    Prioritaet: "HOCH"
-  },
-  {
-    Raum_ID: "ROOM-MOBAU-VERKAUF",
-    Objekt_ID: "OBJ-MOBAU",
-    Bereich: "Verkauf",
-    Raumname: "Verkaufshalle / Ausstellung",
-    Intervall: "Dienstag und Donnerstag",
-    Sollzeit: "45",
-    Prioritaet: "NORMAL"
-  }
-];
-
-const tasks = [
-  {
-    Task_ID: "TASK-001",
-    Raum_ID: "ROOM-3707-HWC",
-    Bereich: "WC",
-    Aufgabe: "WC reinigen",
-    Material: "Powerfix Gel / SR11 nach Vorgabe",
-    Anleitung: "Nur im WC verwenden. Einwirken lassen, bürsten, nachspülen.",
-    Warnung: "Powerfix niemals auf Armaturen verwenden.",
-    Kontrolle: "WC sauber, keine Rückstände, Geruch neutral."
-  },
-  {
-    Task_ID: "TASK-002",
-    Raum_ID: "ROOM-3707-HWC",
-    Bereich: "Waschbecken",
-    Aufgabe: "Waschbecken und Armaturen reinigen",
-    Material: "KO33, bei Kalk SR11 gezielt",
-    Anleitung: "Feucht reinigen. Armaturen trocken nachwischen.",
-    Warnung: "Powerfix greift Armaturen an.",
-    Kontrolle: "Keine Wasserflecken, keine Kalkränder."
-  },
-  {
-    Task_ID: "TASK-003",
-    Raum_ID: "ROOM-3707-HWC",
-    Bereich: "Boden",
-    Aufgabe: "Boden wischen",
-    Material: "Veriprop / Turbo bei starker Verschmutzung",
-    Anleitung: "Nass wischen und trocken nachwischen.",
-    Warnung: "Nasse Bereiche absichern.",
-    Kontrolle: "Boden sauber und trocken."
-  },
-  {
-    Task_ID: "TASK-004",
-    Raum_ID: "ROOM-MOBAU-WC-H",
-    Bereich: "Sanitär",
-    Aufgabe: "WC, Pissoir, Waschbecken und Dusche reinigen",
-    Material: "SR11, KO33, Powerfix nur WC",
-    Anleitung: "Sanitär reinigen. Armaturen nur mit geeignetem Mittel behandeln.",
-    Warnung: "Powerfix nicht auf Armaturen.",
-    Kontrolle: "Sanitär sauber, keine sichtbaren Rückstände."
-  },
-  {
-    Task_ID: "TASK-005",
-    Raum_ID: "ROOM-MOBAU-VERKAUF",
-    Bereich: "Boden",
-    Aufgabe: "Verkaufshalle und Ausstellung wischen",
-    Material: "Veriprop / Turbo bei Bedarf",
-    Anleitung: "Boden nass wischen.",
-    Warnung: "Kein Trockenwischen bei Mobau.",
-    Kontrolle: "Boden sichtbar sauber."
-  }
-];
-
-const materials = [
-  {
-    Name: "SR11",
-    Gefahr: "Verursacht schwere Verätzungen und Augenschäden.",
-    Dosierung: "10–50 ml / 10 Liter.",
-    Anwendung: "Gegen Kalk und Sanitärverschmutzungen.",
-    Warnung: "Handschuhe tragen. Nicht mischen."
-  },
-  {
-    Name: "KO33",
-    Gefahr: "Bei sachgemäßer Anwendung keine bedeutende Gefahr.",
-    Dosierung: "40–100 ml / 10 Liter.",
-    Anwendung: "Oberflächen, Spiegel, Armaturen.",
-    Warnung: "Nicht direkt auf empfindliche Flächen sprühen."
-  },
-  {
-    Name: "Veriprop",
-    Gefahr: "Kontakt mit Augen vermeiden.",
-    Dosierung: "40 ml / 8 Liter.",
-    Anwendung: "Boden-Unterhaltsreinigung.",
-    Warnung: "Rutschgefahr bei nassem Boden."
-  },
-  {
-    Name: "Powerfix Gel",
-    Gefahr: "Nur WC. Nicht auf Armaturen verwenden.",
-    Dosierung: "Unverdünnt im WC.",
-    Anwendung: "WC und Urinal.",
-    Warnung: "Greift Armaturen an."
-  }
-];
-
-const shifts = [
-  {
-    Shift_ID: "SHIFT-001",
-    Mitarbeiter_ID: "USR-002",
-    Objekt_ID: "OBJ-3707",
-    Objekt_Name: "Gustav Wolf Nebra",
-    Datum: "2026-05-29",
-    Startzeit: "07:00",
-    Endzeit: "09:00",
-    Status: "GEPLANT",
-    Checkin_Zeit: "",
-    Checkout_Zeit: ""
-  },
-  {
-    Shift_ID: "SHIFT-002",
-    Mitarbeiter_ID: "USR-003",
-    Objekt_ID: "OBJ-MOBAU",
-    Objekt_Name: "Mobau Eisleben",
-    Datum: "2026-05-28",
-    Startzeit: "17:30",
-    Endzeit: "19:30",
-    Status: "GEPLANT",
-    Checkin_Zeit: "",
-    Checkout_Zeit: ""
-  }
-];
-
-const qrCodes = [
-  {
-    QR_ID: "QR-GUSTAV-WOLF-NEBRA",
-    Objekt_ID: "OBJ-3707",
-    Typ: "OBJEKT",
-    Aktiv: "JA"
-  },
-  {
-    QR_ID: "QR-MOBAU",
-    Objekt_ID: "OBJ-MOBAU",
-    Typ: "OBJEKT",
-    Aktiv: "JA"
-  }
-];
-
-appState.notifications = [
-  {
-    Message_ID: "MSG-001",
-    Typ: "KUNDENWUNSCH",
-    Titel: "Zusatzaufgabe bei Gustav Wolf",
-    Nachricht: "Bitte heute Waschbecken im Herren-WC besonders auf Kalk prüfen.",
-    Prioritaet: "HOCH",
-    Status: "OFFEN",
-    Gelesen: "NEIN"
-  }
-];
-
-appState.customerRequests = [
-  {
-    Request_ID: "REQ-001",
-    Objekt_ID: "OBJ-3707",
-    Titel: "Waschbecken besonders prüfen",
-    Beschreibung: "Kalk am Waschbecken kontrollieren.",
-    Fotopflicht: "NEIN",
-    Abrechnungsrelevant: "NEIN",
-    Status: "OFFEN"
-  }
-];
-
-appState.replacementRequests = [
-  {
-    Substitution_ID: "SUB-001",
-    Objekt_Name: "Gustav Wolf Nebra",
-    Datum: "2026-05-29",
-    Startzeit: "07:00",
-    Endzeit: "09:00",
-    Status: "ANGEFRAGT",
-    Grund: "Krankmeldung"
-  }
-];
-
-appState.aiWarnings = [
-  {
-    Titel: "Auffälliger Mitarbeiter-Score",
-    Typ: "MITARBEITER_SCORE",
-    Schweregrad: "HOCH",
-    Beschreibung: "Kevin Müller hat einen Score von 42.",
-    Vorschlag: "Nachschulung und engere Qualitätskontrolle prüfen."
-  }
-];
-
-function openModal({ title = "Facility-OS", content = "", actions = [] }) {
-  document.getElementById("modalTitle").innerHTML = title;
-  document.getElementById("modalContent").innerHTML = content;
-
-  const actionsEl = document.getElementById("modalActions");
-  actionsEl.innerHTML = "";
-
-  actions.forEach((action) => {
-    const button = document.createElement("button");
-    button.className = action.className || "btn";
-    button.innerText = action.label;
-    button.addEventListener("click", action.onClick);
-    actionsEl.appendChild(button);
-  });
-
-  document.getElementById("modalOverlay").classList.remove("hidden");
-}
-
-function closeModal() {
-  document.getElementById("modalOverlay").classList.add("hidden");
-}
-
-function showToast(message, type = "INFO") {
-  const toast = document.getElementById("toast");
-  toast.innerText = message;
-  toast.className = "toast";
-  toast.classList.remove("hidden");
-
-  setTimeout(() => {
-    toast.classList.add("hidden");
-  }, 2600);
-}
+import { appState } from "./appState.js";
+import { loadAppData } from "./loadAppData.js";
+import { dataStore, getData, findByField, filterByField } from "./dataService.js";
+import { openModal, bindModalEvents } from "./modalUi.js";
+import { showToast } from "./toastUi.js";
+import { openQrScanner, closeQrScanner, manualQrInput, bindQrEvents } from "./qrUi.js";
 
 function renderLogin() {
   document.getElementById("app").innerHTML = `
@@ -396,6 +26,7 @@ function renderLogin() {
         <hr>
 
         <button id="demoEmployeeBtn" class="btn secondary">Demo Mitarbeiter</button>
+        <button id="demoNewEmployeeBtn" class="btn secondary">Demo neue Kraft</button>
         <button id="demoManagerBtn" class="btn secondary">Demo Objektleiter</button>
         <button id="demoAdminBtn" class="btn secondary">Demo Admin</button>
         <button id="demoCustomerBtn" class="btn secondary">Demo Kunde</button>
@@ -404,20 +35,37 @@ function renderLogin() {
   `;
 
   document.getElementById("loginBtn").addEventListener("click", loginFromForm);
-  document.getElementById("demoEmployeeBtn").addEventListener("click", () => loginUser("anna@test.de", "Test123!"));
-  document.getElementById("demoManagerBtn").addEventListener("click", () => loginUser("sarah@test.de", "Test123!"));
-  document.getElementById("demoAdminBtn").addEventListener("click", () => loginUser("allrountin@gmail.com", "Test123!"));
-  document.getElementById("demoCustomerBtn").addEventListener("click", () => loginUser("kunde@test.de", "Test123!"));
+
+  document.getElementById("demoEmployeeBtn").addEventListener("click", () => {
+    loginUser("anna@test.de", "Test123!");
+  });
+
+  document.getElementById("demoNewEmployeeBtn").addEventListener("click", () => {
+    loginUser("kevin@test.de", "Test123!");
+  });
+
+  document.getElementById("demoManagerBtn").addEventListener("click", () => {
+    loginUser("sarah@test.de", "Test123!");
+  });
+
+  document.getElementById("demoAdminBtn").addEventListener("click", () => {
+    loginUser("allrountin@gmail.com", "Test123!");
+  });
+
+  document.getElementById("demoCustomerBtn").addEventListener("click", () => {
+    loginUser("kunde@test.de", "Test123!");
+  });
 }
 
 function loginFromForm() {
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value;
+
   loginUser(email, password);
 }
 
 function loginUser(email, password) {
-  const user = users.find((item) => item.Email.toLowerCase() === email.toLowerCase());
+  const user = findByField("users", "Email", email);
 
   if (!user) {
     showToast("Benutzer nicht gefunden", "ERROR");
@@ -429,21 +77,95 @@ function loginUser(email, password) {
     return;
   }
 
+  if (user.Aktiv !== "JA") {
+    showToast("Benutzer deaktiviert", "ERROR");
+    return;
+  }
+
+  const objects = getData("objects");
+
   appState.currentUser = user;
   appState.currentObject = user.Rolle === "KUNDE" ? objects[1] : objects[0];
   appState.helpLevel = Number(user.Hilfestufe || 1);
-  appState.guidedMode = user.Objektkenntnis === "NEIN" || appState.helpLevel >= 4;
+  appState.guidedMode =
+    user.Objektkenntnis === "NEIN" ||
+    appState.helpLevel >= 4;
+
+  appState.cachedUsers = getData("users");
+  appState.cachedObjects = getData("objects");
+  appState.cachedRooms = getData("rooms");
+  appState.cachedTasks = getData("tasks");
+  appState.cachedMaterials = getData("materials");
+  appState.cachedShifts = getData("shifts");
+  appState.qrCodes = getData("qrCodes");
+  appState.notifications = getData("notifications");
+  appState.customerRequests = getData("customerRequests");
 
   localStorage.setItem("facilityUser", JSON.stringify(user));
 
-  renderDashboard();
+  renderCheckinStart();
   showToast("Login erfolgreich", "SUCCESS");
 }
 
 function logout() {
   localStorage.removeItem("facilityUser");
+
   appState.currentUser = null;
+  appState.currentObject = null;
+  appState.currentRoom = null;
+  appState.currentShift = null;
+
+  appState.shiftStarted = false;
+  appState.qrValidated = false;
+  appState.gpsValidated = false;
+  appState.mandatoryMessagesConfirmed = false;
+
   renderLogin();
+}
+
+function renderCheckinStart() {
+  document.getElementById("app").innerHTML = `
+    <div class="app-shell">
+      <div class="header-card">
+        <h1>Facility-OS</h1>
+        <p>Arbeitsbeginn</p>
+        <div class="role-badge">${appState.currentUser?.Rolle || "-"}</div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-title">QR-Check-in erforderlich</div>
+        <div class="section-subtitle">
+          Bitte Objekt-QR-Code scannen. Danach werden Standort, Objekt und Arbeitsbeginn geprüft.
+        </div>
+
+        <div class="button-stack" style="margin-top: 16px;">
+          <button id="btnOpenQrScanner" class="btn green">QR-Code scannen</button>
+          <button id="btnOpenDailyControl" class="btn secondary">Tagessteuerung öffnen</button>
+          <button id="btnLogout" class="btn secondary">Logout</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  bindCheckinStartEvents();
+
+  setTimeout(() => {
+    openQrScanner();
+  }, 500);
+}
+
+function bindCheckinStartEvents() {
+  document.getElementById("btnOpenQrScanner").addEventListener("click", openQrScanner);
+
+  document.getElementById("btnOpenDailyControl").addEventListener("click", () => {
+    import("./dailyControlUi.js").then((module) => {
+      module.showDailyControl();
+    });
+  });
+
+  document.getElementById("btnLogout").addEventListener("click", logout);
+
+  bindQrEvents();
 }
 
 function renderDashboard() {
@@ -527,14 +249,10 @@ function renderDashboard() {
     </div>
   `;
 
-  bindEvents();
+  bindDashboardEvents();
 }
 
-function bindEvents() {
-  document.getElementById("modalCloseBtn").onclick = closeModal;
-  document.getElementById("closeQrBtn").onclick = closeQrScanner;
-  document.getElementById("manualQrBtn").onclick = manualQrInput;
-
+function bindDashboardEvents() {
   document.getElementById("btnStartShift").onclick = openQrScanner;
   document.getElementById("btnMyShifts").onclick = showMyShifts;
   document.getElementById("btnMailbox").onclick = showMailbox;
@@ -563,83 +281,23 @@ function bindEvents() {
   document.getElementById("btnCustomerPortal").onclick = showCustomerPortal;
   document.getElementById("btnAdmin").onclick = showAdmin;
   document.getElementById("btnLogout").onclick = logout;
-}
 
-function openQrScanner() {
-  document.getElementById("qrOverlay").classList.remove("hidden");
-}
-
-function closeQrScanner() {
-  document.getElementById("qrOverlay").classList.add("hidden");
-}
-
-function manualQrInput() {
-  const code = prompt("QR-Code eingeben");
-  if (code) processQr(code);
-}
-
-function processQr(code) {
-  const qr = qrCodes.find((item) => item.QR_ID.toLowerCase() === code.toLowerCase());
-
-  if (!qr) {
-    showToast("QR-Code nicht gefunden", "ERROR");
-    return;
-  }
-
-  const object = objects.find((item) => item.Objekt_ID === qr.Objekt_ID);
-  appState.currentObject = object;
-
-  closeQrScanner();
-  startOrEndShift();
-
-  if (appState.customerRequests.some((item) => item.Objekt_ID === object.Objekt_ID && item.Status !== "ERLEDIGT")) {
-    showCustomerRequests();
-  }
-}
-
-function startOrEndShift() {
-  const user = appState.currentUser;
-
-  const shift = shifts.find(
-    (item) =>
-      item.Mitarbeiter_ID === user.User_ID &&
-      item.Objekt_ID === appState.currentObject.Objekt_ID &&
-      item.Status !== "ABGESCHLOSSEN"
-  );
-
-  if (!shift) {
-    showToast("Keine offene Schicht gefunden", "ERROR");
-    return;
-  }
-
-  if (!shift.Checkin_Zeit) {
-    shift.Checkin_Zeit = new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
-    shift.Status = "GESTARTET";
-    appState.currentShift = shift;
-    showToast("Schicht gestartet", "SUCCESS");
-
-    if (appState.guidedMode) {
-      showHelp();
-    }
-
-    return;
-  }
-
-  if (!shift.Checkout_Zeit) {
-    shift.Checkout_Zeit = new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
-    shift.Status = "ABGESCHLOSSEN";
-    showToast("Schicht beendet", "SUCCESS");
-    showMyShifts();
-  }
+  bindQrEvents();
 }
 
 function showMyShifts() {
+  const shifts = getData("shifts");
   const user = appState.currentUser;
-  const userShifts = shifts.filter((item) => item.Mitarbeiter_ID === user.User_ID);
+
+  const userShifts = shifts.filter(
+    (item) => item.Mitarbeiter_ID === user.User_ID
+  );
 
   openModal({
     title: "Meine Schichten",
-    content: userShifts.map(formatShift).join("") || `<div class="info-card">Keine Schichten vorhanden.</div>`
+    content:
+      userShifts.map(formatShift).join("") ||
+      `<div class="info-card">Keine Schichten vorhanden.</div>`
   });
 }
 
@@ -657,15 +315,23 @@ function formatShift(shift) {
 }
 
 function showMailbox() {
+  const notifications = getData("notifications");
+
   openModal({
     title: "Postfach",
-    content: appState.notifications.map((msg) => `
-      <div class="info-card ${msg.Gelesen === "JA" ? "" : "yellow"}">
-        <div class="card-title">${msg.Titel}</div>
-        ${msg.Nachricht}<br><br>
-        Status: ${msg.Status}
-      </div>
-    `).join("") || `<div class="info-card">Keine Nachrichten vorhanden.</div>`
+    content:
+      notifications
+        .map(
+          (msg) => `
+            <div class="info-card ${msg.Gelesen === "JA" ? "" : "yellow"}">
+              <div class="card-title">${msg.Titel}</div>
+              ${msg.Nachricht}<br><br>
+              Status: ${msg.Status}
+            </div>
+          `
+        )
+        .join("") ||
+      `<div class="info-card">Keine Nachrichten vorhanden.</div>`
   });
 }
 
@@ -679,7 +345,7 @@ function showSickForm() {
       <label>Bis</label>
       <input id="sickTo" type="date">
 
-      <label>Grund</label>
+      <label>Grund optional</label>
       <textarea id="sickReason"></textarea>
     `,
     actions: [
@@ -688,7 +354,10 @@ function showSickForm() {
         className: "btn green",
         onClick: () => {
           showToast("Krankmeldung gespeichert. Vertretung wird benötigt.", "SUCCESS");
-          closeModal();
+          openModal({
+            title: "Vertretungsworkflow",
+            content: `<div class="info-card orange">Vertretung und Buchhaltung werden im nächsten Block angebunden.</div>`
+          });
         }
       }
     ]
@@ -714,7 +383,10 @@ function showVacationForm() {
         className: "btn green",
         onClick: () => {
           showToast("Urlaubsantrag gespeichert. Vertretung wird geprüft.", "SUCCESS");
-          closeModal();
+          openModal({
+            title: "Urlaubsworkflow",
+            content: `<div class="info-card orange">Genehmigung, Vertretung und Buchhaltung werden im nächsten Block angebunden.</div>`
+          });
         }
       }
     ]
@@ -722,17 +394,40 @@ function showVacationForm() {
 }
 
 function showMaterialForm() {
+  const materials = getData("materials");
+
   openModal({
     title: "Material melden",
     content: `
       <label>Material</label>
-      <input id="matName" placeholder="z. B. SR11">
+      <select id="matName">
+        <option value="">Bitte auswählen</option>
+        ${materials
+          .map(
+            (item) =>
+              `<option value="${item.Name}">${item.Name}</option>`
+          )
+          .join("")}
+      </select>
 
       <label>Menge</label>
-      <input id="matAmount" placeholder="z. B. 5">
+      <select id="matAmount">
+        <option value="">Bitte auswählen</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+      </select>
 
       <label>Einheit</label>
-      <input id="matUnit" placeholder="z. B. Liter, Stück, Rollen">
+      <select id="matUnit">
+        <option value="">Bitte auswählen</option>
+        <option value="Stück">Stück</option>
+        <option value="Liter">Liter</option>
+        <option value="Rollen">Rollen</option>
+        <option value="Flaschen">Flaschen</option>
+        <option value="Kanister">Kanister</option>
+      </select>
 
       <label>Notiz</label>
       <textarea id="matNote"></textarea>
@@ -742,7 +437,7 @@ function showMaterialForm() {
         label: "Meldung speichern",
         className: "btn green",
         onClick: () => {
-          const material = document.getElementById("matName").value.trim();
+          const material = document.getElementById("matName").value;
 
           if (!material) {
             showToast("Material fehlt", "ERROR");
@@ -758,7 +453,6 @@ function showMaterialForm() {
           });
 
           showToast("Materialmeldung gespeichert", "SUCCESS");
-          closeModal();
         }
       }
     ]
@@ -767,15 +461,15 @@ function showMaterialForm() {
 
 function showHelp() {
   openModal({
-    title: "Hilfe / Objektwissen",
+    title: "Objekt-Wiki",
     content: `
       <div class="info-card blue">
         Für neue Kräfte und Vertretungen wird hier der geführte Modus angezeigt.
       </div>
 
       <div class="button-stack">
-        <button class="btn blue" onclick="window.facilityShowRooms()">Räume öffnen</button>
-        <button class="btn red" onclick="window.facilityShowDanger()">Gefahrenhinweise</button>
+        <button class="btn blue" onclick="window.facilityShowRooms()">Bereiche öffnen</button>
+        <button class="btn red" onclick="window.facilityShowDanger()">Sicherheitsdatenblätter</button>
       </div>
     `
   });
@@ -785,7 +479,7 @@ function showObjectInfo() {
   const obj = appState.currentObject;
 
   openModal({
-    title: "Objektinfo",
+    title: "Objektstammdaten",
     content: `
       <div class="info-card blue">
         <div class="card-title">${obj.Name}</div>
@@ -798,7 +492,7 @@ function showObjectInfo() {
       </div>
 
       <div class="info-card yellow">
-        <div class="card-title">Besonderheiten</div>
+        <div class="card-title">Objektbesonderheiten</div>
         ${obj.Besonderheiten}
       </div>
 
@@ -811,21 +505,37 @@ function showObjectInfo() {
 }
 
 function showRooms() {
-  const objectRooms = rooms.filter((room) => room.Objekt_ID === appState.currentObject.Objekt_ID);
+  const rooms = getData("rooms");
+
+  const objectRooms = rooms.filter(
+    (room) => room.Objekt_ID === appState.currentObject.Objekt_ID
+  );
 
   openModal({
-    title: "Räume",
-    content: objectRooms.map((room) => `
-      <button class="room-card" onclick="window.facilityShowRoom('${room.Raum_ID}')">
-        ${room.Raumname}
-      </button>
-    `).join("")
+    title: "Bereiche",
+    content: objectRooms
+      .map(
+        (room) => `
+          <button class="room-card" onclick="window.facilityShowRoom('${room.Raum_ID}')">
+            ${room.Raumname}
+          </button>
+        `
+      )
+      .join("")
   });
 }
 
 function showRoomDetails(roomId) {
+  const rooms = getData("rooms");
+  const tasks = getData("tasks");
+
   const room = rooms.find((item) => item.Raum_ID === roomId);
   const roomTasks = tasks.filter((task) => task.Raum_ID === roomId);
+
+  if (!room) {
+    showToast("Bereich nicht gefunden", "ERROR");
+    return;
+  }
 
   openModal({
     title: room.Raumname,
@@ -836,41 +546,54 @@ function showRoomDetails(roomId) {
         Priorität: ${room.Prioritaet}
       </div>
 
-      ${roomTasks.map((task) => `
-        <div class="info-card green">
-          <div class="card-title">${task.Bereich}</div>
-          Aufgabe: ${task.Aufgabe}<br><br>
-          Material: ${task.Material}<br><br>
-          Anleitung: ${task.Anleitung}<br><br>
-          <b>Warnung:</b> ${task.Warnung}<br><br>
-          Kontrolle: ${task.Kontrolle}
-        </div>
-      `).join("")}
+      ${roomTasks
+        .map(
+          (task) => `
+            <div class="info-card green">
+              <div class="card-title">${task.Bereich}</div>
+              Leistung: ${task.Aufgabe}<br><br>
+              Material: ${task.Material}<br><br>
+              Anleitung: ${task.Anleitung}<br><br>
+              <b>Warnung:</b> ${task.Warnung}<br><br>
+              Kontrolle: ${task.Kontrolle}
+            </div>
+          `
+        )
+        .join("")}
     `
   });
 }
 
 function showCleaningPlan() {
-  const objectRooms = rooms.filter((room) => room.Objekt_ID === appState.currentObject.Objekt_ID);
+  const rooms = getData("rooms");
+
+  const objectRooms = rooms.filter(
+    (room) => room.Objekt_ID === appState.currentObject.Objekt_ID
+  );
 
   openModal({
-    title: "Putzplan",
-    content: objectRooms.map((room) => `
-      <div class="info-card blue">
-        <div class="card-title">${room.Raumname}</div>
-        Intervall: ${room.Intervall}<br>
-        Sollzeit: ${room.Sollzeit} Minuten
-      </div>
-    `).join("")
+    title: "Leistungsverzeichnis",
+    content: objectRooms
+      .map(
+        (room) => `
+          <div class="info-card blue">
+            <div class="card-title">${room.Raumname}</div>
+            Intervall: ${room.Intervall}<br>
+            Sollzeit: ${room.Sollzeit} Minuten
+          </div>
+        `
+      )
+      .join("")
   });
 }
 
 function showDocuments() {
   openModal({
-    title: "Dokumente",
+    title: "Dokumente entfallen",
     content: `
-      <div class="info-card blue">Leistungsbeschreibung Gustav Wolf – Platzhalter</div>
-      <div class="info-card red">Sicherheitsdatenblatt SR11 – Platzhalter</div>
+      <div class="info-card blue">
+        Dokumente werden in Version 1.1 in Objekt-Wiki, Leistungsverzeichnis und Sicherheitsdatenblätter integriert.
+      </div>
     `
   });
 }
@@ -892,7 +615,7 @@ function showFloorPlan() {
 
 function showWastePlan() {
   openModal({
-    title: "Müllplan",
+    title: "Entsorgung",
     content: `
       <div class="info-card blue">
         Mobau: Keine Mülltrennung. Großer Container auf dem Hof mit schwarzem Deckel.
@@ -903,7 +626,7 @@ function showWastePlan() {
 
 function showKeys() {
   openModal({
-    title: "Schlüssel",
+    title: "Schlüsselverwaltung",
     content: `
       <div class="info-card green">
         Schlüssel befinden sich bei der Mitarbeiterin. Nicht weitergeben.
@@ -913,30 +636,42 @@ function showKeys() {
 }
 
 function showDanger() {
+  const materials = getData("materials");
+
   openModal({
-    title: "Gefahren & Anwendung",
-    content: materials.map((item) => `
-      <div class="info-card red">
-        <div class="card-title">${item.Name}</div>
-        Gefahr: ${item.Gefahr}<br><br>
-        Dosierung: ${item.Dosierung}<br><br>
-        Anwendung: ${item.Anwendung}<br><br>
-        Warnung: ${item.Warnung}
-      </div>
-    `).join("")
+    title: "Sicherheitsdatenblätter",
+    content: materials
+      .map(
+        (item) => `
+          <div class="info-card red">
+            <div class="card-title">${item.Name}</div>
+            Gefahr: ${item.Gefahr}<br><br>
+            Dosierung: ${item.Dosierung}<br><br>
+            Anwendung: ${item.Anwendung}<br><br>
+            Warnung: ${item.Warnung}
+          </div>
+        `
+      )
+      .join("")
   });
 }
 
 function showTickets() {
   openModal({
     title: "Tickets",
-    content: appState.tickets.map((ticket) => `
-      <div class="info-card yellow">
-        <div class="card-title">${ticket.Titel}</div>
-        ${ticket.Beschreibung}<br>
-        Status: ${ticket.Status}
-      </div>
-    `).join("") || `<div class="info-card">Keine Tickets vorhanden.</div>`,
+    content:
+      appState.tickets
+        .map(
+          (ticket) => `
+            <div class="info-card yellow">
+              <div class="card-title">${ticket.Titel}</div>
+              ${ticket.Beschreibung}<br>
+              Status: ${ticket.Status}
+            </div>
+          `
+        )
+        .join("") ||
+      `<div class="info-card">Keine Tickets vorhanden.</div>`,
     actions: [
       {
         label: "Neues Ticket",
@@ -991,65 +726,79 @@ function showTicketForm() {
 }
 
 function showCustomerRequests() {
+  const requests = getData("customerRequests");
+
   openModal({
     title: "Kundenwünsche",
-    content: appState.customerRequests.map((item) => `
-      <div class="info-card yellow">
-        <div class="card-title">${item.Titel}</div>
-        ${item.Beschreibung}<br><br>
-        Fotopflicht: ${item.Fotopflicht}<br>
-        Abrechnung: ${item.Abrechnungsrelevant}<br>
-        Status: ${item.Status}
-      </div>
-    `).join("") || `<div class="info-card">Keine Kundenwünsche vorhanden.</div>`
+    content:
+      requests
+        .map(
+          (item) => `
+            <div class="info-card yellow">
+              <div class="card-title">${item.Titel}</div>
+              ${item.Beschreibung}<br><br>
+              Fotopflicht: ${item.Fotopflicht}<br>
+              Abrechnung: ${item.Abrechnungsrelevant}<br>
+              Status: ${item.Status}
+            </div>
+          `
+        )
+        .join("") ||
+      `<div class="info-card">Keine Kundenwünsche vorhanden.</div>`
   });
 }
 
 function showReplacements() {
   openModal({
     title: "Vertretungen",
-    content: appState.replacementRequests.map((item) => `
-      <div class="info-card orange">
-        <div class="card-title">${item.Objekt_Name}</div>
-        Datum: ${item.Datum}<br>
-        Zeit: ${item.Startzeit}–${item.Endzeit}<br>
-        Status: ${item.Status}<br>
-        Grund: ${item.Grund}
-      </div>
-    `).join("")
+    content:
+      appState.replacementSuggestions
+        ?.map(
+          (item) => `
+            <div class="info-card orange">
+              <div class="card-title">${item.Objekt_Name}</div>
+              Datum: ${item.Datum}<br>
+              Zeit: ${item.Startzeit}–${item.Endzeit}<br>
+              Status: ${item.Status}<br>
+              Grund: ${item.Grund}
+            </div>
+          `
+        )
+        .join("") ||
+      `<div class="info-card">Keine Vertretungen vorhanden.</div>`
   });
 }
 
 function showWarnings() {
   openModal({
-    title: "KI-Warnungen",
-    content: appState.aiWarnings.map((warning) => `
-      <div class="info-card red">
-        <div class="card-title">${warning.Titel}</div>
-        Typ: ${warning.Typ}<br>
-        Schweregrad: ${warning.Schweregrad}<br><br>
-        ${warning.Beschreibung}<br><br>
-        Vorschlag: <b>${warning.Vorschlag}</b>
-      </div>
-    `).join("")
+    title: "Auffälligkeiten",
+    content:
+      appState.aiWarnings
+        .map(
+          (warning) => `
+            <div class="info-card red">
+              <div class="card-title">${warning.Titel}</div>
+              Typ: ${warning.Typ}<br>
+              Schweregrad: ${warning.Schweregrad}<br><br>
+              ${warning.Beschreibung}<br><br>
+              Vorschlag: <b>${warning.Vorschlag}</b>
+            </div>
+          `
+        )
+        .join("") ||
+      `<div class="info-card">Keine Auffälligkeiten vorhanden.</div>`
   });
 }
 
 function showAnalytics() {
   openModal({
-    title: "Analysen",
+    title: "Auswertungen",
     content: `
       <div class="info-card orange">
         <div class="card-title">Arbeitszeit Gustav Wolf</div>
         Sollzeit: 120 Minuten<br>
         Istzeit: 135 Minuten<br>
         Abweichung: +15 Minuten
-      </div>
-
-      <div class="info-card red">
-        <div class="card-title">Mitarbeiter Kevin Müller</div>
-        Score: 42<br>
-        Empfehlung: Nachschulung und Kontrolle.
       </div>
     `
   });
@@ -1060,7 +809,7 @@ function showCustomerPortal() {
     title: "Kundenportal",
     content: `
       <div class="info-card purple">
-        Kunden können Wünsche, Beschwerden und Zusatzleistungen erstellen.
+        Kunden können Wünsche, Reklamationen und Zusatzleistungen erstellen.
       </div>
 
       <button class="btn purple" onclick="window.facilityShowCustomerRequests()">Kundenwünsche anzeigen</button>
@@ -1073,10 +822,10 @@ function showAdmin() {
     title: "Admin",
     content: `
       <div class="info-card red">
-        Benutzer: ${users.length}<br>
-        Objekte: ${objects.length}<br>
-        Räume: ${rooms.length}<br>
-        Materialien: ${materials.length}
+        Benutzer: ${getData("users").length}<br>
+        Objekte: ${getData("objects").length}<br>
+        Bereiche: ${getData("rooms").length}<br>
+        Materialien: ${getData("materials").length}
       </div>
     `
   });
@@ -1087,17 +836,40 @@ window.facilityShowRooms = showRooms;
 window.facilityShowDanger = showDanger;
 window.facilityShowCustomerRequests = showCustomerRequests;
 
-function boot() {
-  document.getElementById("modalCloseBtn").onclick = closeModal;
-  document.getElementById("closeQrBtn").onclick = closeQrScanner;
-  document.getElementById("manualQrBtn").onclick = manualQrInput;
+async function boot() {
+  bindModalEvents();
+  bindQrEvents();
+
+  const loaded = await loadAppData();
+
+  if (!loaded) {
+    document.getElementById("app").innerHTML = `
+      <div class="app-shell">
+        <div class="section-card">
+          Daten konnten nicht geladen werden.
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  appState.cachedUsers = getData("users");
+  appState.cachedObjects = getData("objects");
+  appState.cachedRooms = getData("rooms");
+  appState.cachedTasks = getData("tasks");
+  appState.cachedMaterials = getData("materials");
+  appState.cachedShifts = getData("shifts");
+  appState.qrCodes = getData("qrCodes");
+  appState.notifications = getData("notifications");
+  appState.customerRequests = getData("customerRequests");
 
   const savedUser = localStorage.getItem("facilityUser");
 
   if (savedUser) {
     appState.currentUser = JSON.parse(savedUser);
-    appState.currentObject = objects[0];
-    renderDashboard();
+    appState.currentObject = getData("objects")[0];
+
+    renderCheckinStart();
     return;
   }
 
