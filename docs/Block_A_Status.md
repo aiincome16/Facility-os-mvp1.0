@@ -64,3 +64,5 @@ Block A
 ## QR-Daten im appState
 ✅ abgeschlossen
 
+## loadAppData
+✅ Grundversion fertig
