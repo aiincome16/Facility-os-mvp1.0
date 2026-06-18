@@ -1,0 +1,14 @@
+[
+  {
+    "QR_ID": "QR-GUSTAV-WOLF-NEBRA",
+    "Objekt_ID": "OBJ-3707",
+    "Typ": "OBJEKT",
+    "Aktiv": "JA"
+  },
+  {
+    "QR_ID": "QR-MOBAU",
+    "Objekt_ID": "OBJ-MOBAU",
+    "Typ": "OBJEKT",
+    "Aktiv": "JA"
+  }
+]
