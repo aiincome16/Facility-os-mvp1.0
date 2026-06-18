@@ -1,0 +1,81 @@
+[
+  {
+    "User_ID": "USR-001",
+    "Vorname": "Kristin",
+    "Nachname": "Rabener",
+    "Rolle": "ADMIN",
+    "Email": "allrountin@gmail.com",
+    "Passwort": "Test123!",
+    "Wohnort": "Eisleben",
+    "Auto": "JA",
+    "Score": 95,
+    "Objektkenntnis": "JA",
+    "Hilfestufe": 1,
+    "Aktiv": "JA"
+  },
+  {
+    "User_ID": "USR-002",
+    "Vorname": "Anna",
+    "Nachname": "Becker",
+    "Rolle": "MITARBEITER",
+    "Email": "anna@test.de",
+    "Passwort": "Test123!",
+    "Wohnort": "Nebra",
+    "Auto": "JA",
+    "Score": 96,
+    "Objektkenntnis": "JA",
+    "Hilfestufe": 1,
+    "Aktiv": "JA"
+  },
+  {
+    "User_ID": "USR-003",
+    "Vorname": "Lisa",
+    "Nachname": "Schneider",
+    "Rolle": "MITARBEITER",
+    "Email": "lisa@test.de",
+    "Passwort": "Test123!",
+    "Wohnort": "Eisleben",
+    "Auto": "JA",
+    "Score": 88,
+    "Objektkenntnis": "JA",
+    "Hilfestufe": 1,
+    "Aktiv": "JA"
+  },
+  {
+    "User_ID": "USR-004",
+    "Vorname": "Kevin",
+    "Nachname": "Müller",
+    "Rolle": "MITARBEITER",
+    "Email": "kevin@test.de",
+    "Passwort": "Test123!",
+    "Wohnort": "Querfurt",
+    "Auto": "NEIN",
+    "Score": 42,
+    "Objektkenntnis": "NEIN",
+    "Hilfestufe": 4,
+    "Aktiv": "JA"
+  },
+  {
+    "User_ID": "USR-005",
+    "Vorname": "Sarah",
+    "Nachname": "Mueller",
+    "Rolle": "OBJEKTLEITER",
+    "Email": "sarah@test.de",
+    "Passwort": "Test123!",
+    "Wohnort": "Halle",
+    "Auto": "JA",
+    "Score": 90,
+    "Objektkenntnis": "JA",
+    "Hilfestufe": 2,
+    "Aktiv": "JA"
+  },
+  {
+    "User_ID": "USR-006",
+    "Vorname": "Mobau",
+    "Nachname": "Kunde",
+    "Rolle": "KUNDE",
+    "Email": "kunde@test.de",
+    "Passwort": "Test123!",
+    "Aktiv": "JA"
+  }
+]
