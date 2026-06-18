@@ -876,4 +876,9 @@ async function boot() {
   renderLogin();
 }
 
+export {
+  renderDashboard,
+  renderCheckinStart
+};
+
 boot();
