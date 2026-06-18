@@ -60,3 +60,7 @@ Block A
 
 ## QR-Oberfläche
 ✅ mit checkinService verbunden
+
+## QR-Daten im appState
+✅ abgeschlossen
+
