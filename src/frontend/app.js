@@ -872,17 +872,8 @@ async function boot() {
   appState.notifications = getData("notifications");
   appState.customerRequests = getData("customerRequests");
 
-  const savedUser = localStorage.getItem("facilityUser");
-
-  if (savedUser) {
-    appState.currentUser = JSON.parse(savedUser);
-    appState.currentObject = getData("objects")[0];
-
-    renderCheckinStart();
-    return;
-  }
-
-  renderLogin();
+  localStorage.removeItem("facilityUser");
+renderLogin();
 }
 
 export {
