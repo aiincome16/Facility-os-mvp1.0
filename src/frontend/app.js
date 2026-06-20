@@ -194,7 +194,145 @@ function renderRoleDashboard() {
 
   }
 }
-function renderDashboard() {
+function renderEmployeeDashboard() {
+  function renderCustomerDashboard() {
+
+  document.getElementById("app").innerHTML = `
+    <div class="app-shell">
+
+      <div class="header-card">
+        <h1>Kundenportal</h1>
+        <p>${appState.currentObject?.Name || ""}</p>
+      </div>
+
+      <div class="section-card">
+
+        <div class="button-stack">
+
+          <button
+            id="btnCustomerRequests"
+            class="btn purple">
+            Wünsche
+          </button>
+
+          <button
+            id="btnTickets"
+            class="btn yellow">
+            Reklamationen
+          </button>
+
+          <button
+            id="btnLogout"
+            class="btn secondary">
+            Logout
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById("btnCustomerRequests")
+    .onclick = showCustomerRequests;
+
+  document.getElementById("btnTickets")
+    .onclick = showTickets;
+
+  document.getElementById("btnLogout")
+    .onclick = logout;
+}
+  function renderManagerDashboard() {
+
+  document.getElementById("app").innerHTML = `
+    <div class="app-shell">
+
+      <div class="header-card">
+        <h1>Objektleiter</h1>
+      </div>
+
+      <div class="section-card">
+
+        <div class="button-stack">
+
+          <button id="btnReplacement" class="btn orange">
+            Vertretungen
+          </button>
+
+          <button id="btnWarnings" class="btn orange">
+            KI Warnungen
+          </button>
+
+          <button id="btnAnalytics" class="btn orange">
+            Auswertungen
+          </button>
+
+          <button id="btnMailbox" class="btn green">
+            Postfach
+          </button>
+
+          <button id="btnLogout" class="btn secondary">
+            Logout
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById("btnReplacement")
+    .onclick = showReplacements;
+
+  document.getElementById("btnWarnings")
+    .onclick = showWarnings;
+
+  document.getElementById("btnAnalytics")
+    .onclick = showAnalytics;
+
+  document.getElementById("btnMailbox")
+    .onclick = showMailbox;
+
+  document.getElementById("btnLogout")
+    .onclick = logout;
+}
+  function renderAdminDashboard() {
+
+  document.getElementById("app").innerHTML = `
+    <div class="app-shell">
+
+      <div class="header-card">
+        <h1>Admin</h1>
+      </div>
+
+      <div class="section-card">
+
+        <div class="button-stack">
+
+          <button id="btnAdmin" class="btn red">
+            System
+          </button>
+
+          <button id="btnLogout" class="btn secondary">
+            Logout
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById("btnAdmin")
+    .onclick = showAdmin;
+
+  document.getElementById("btnLogout")
+    .onclick = logout;
+}
+
 if (!appState.currentObject) {
   showToast(
     "Bitte zuerst am Objekt einchecken",
