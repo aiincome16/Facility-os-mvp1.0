@@ -85,7 +85,7 @@ function loginUser(email, password) {
   const objects = getData("objects");
 
   appState.currentUser = user;
-  appState.currentObject = user.Rolle === "KUNDE" ? objects[1] : objects[0];
+  appState.currentObject = null;
   appState.helpLevel = Number(user.Hilfestufe || 1);
   appState.guidedMode =
     user.Objektkenntnis === "NEIN" ||
