@@ -167,7 +167,33 @@ function bindCheckinStartEvents() {
 
   bindQrEvents();
 }
+function renderRoleDashboard() {
 
+  const role = appState.currentUser?.Rolle;
+
+  switch(role) {
+
+    case "MITARBEITER":
+      renderEmployeeDashboard();
+      break;
+
+    case "OBJEKTLEITER":
+      renderManagerDashboard();
+      break;
+
+    case "ADMIN":
+      renderAdminDashboard();
+      break;
+
+    case "KUNDE":
+      renderCustomerDashboard();
+      break;
+
+    default:
+      renderEmployeeDashboard();
+
+  }
+}
 function renderDashboard() {
 if (!appState.currentObject) {
   showToast(
