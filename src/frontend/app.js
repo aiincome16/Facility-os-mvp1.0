@@ -169,6 +169,15 @@ function bindCheckinStartEvents() {
 }
 
 function renderDashboard() {
+if (!appState.currentObject) {
+  showToast(
+    "Bitte zuerst am Objekt einchecken",
+    "ERROR"
+  );
+
+  renderCheckinStart();
+  return;
+}  
   const user = appState.currentUser;
 
   document.getElementById("app").innerHTML = `
