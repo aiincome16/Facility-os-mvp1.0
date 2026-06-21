@@ -140,7 +140,6 @@ function renderCheckinStart() {
 
         <div class="button-stack" style="margin-top: 16px;">
           <button id="btnOpenQrScanner" class="btn green">QR-Code scannen</button>
-          <button id="btnOpenDailyControl" class="btn secondary">Tagessteuerung öffnen</button>
           <button id="btnLogout" class="btn secondary">Logout</button>
         </div>
       </div>
@@ -331,7 +330,7 @@ function renderRoleDashboard() {
   document.getElementById("btnLogout")
     .onclick = logout;
 }
-
+function renderEmployeeDashboard() {
 if (!appState.currentObject) {
   showToast(
     "Bitte zuerst am Objekt einchecken",
@@ -1038,6 +1037,8 @@ async function boot() {
   localStorage.removeItem("facilityUser");
 renderLogin();
 }
+
+const renderDashboard = renderRoleDashboard;
 
 export {
   renderDashboard,
