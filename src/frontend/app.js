@@ -194,7 +194,6 @@ function renderRoleDashboard() {
 
   }
 }
-function renderEmployeeDashboard() {
   function renderCustomerDashboard() {
 
   document.getElementById("app").innerHTML = `
