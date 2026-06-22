@@ -183,6 +183,10 @@ function renderRoleDashboard() {
     case "ADMIN":
       renderAdminDashboard();
       break;
+      
+    case "BUCHHALTUNG":
+      renderAccountingDashboard();
+      break;
 
     case "KUNDE":
       renderCustomerDashboard();
@@ -326,6 +330,61 @@ function renderRoleDashboard() {
 
   document.getElementById("btnAdmin")
     .onclick = showAdmin;
+
+  document.getElementById("btnLogout")
+    .onclick = logout;
+}
+function renderAccountingDashboard() {
+
+  document.getElementById("app").innerHTML = `
+    <div class="app-shell">
+
+      <div class="header-card">
+        <h1>Buchhaltung</h1>
+      </div>
+
+      <div class="section-card">
+
+        <div class="button-stack">
+
+          <button id="btnTimesheets" class="btn blue">
+            Stundennachweise
+          </button>
+
+          <button id="btnInvoices" class="btn orange">
+            Abrechnung
+          </button>
+
+          <button id="btnCosts" class="btn yellow">
+            Materialkosten
+          </button>
+
+          <button id="btnExport" class="btn green">
+            Export
+          </button>
+
+          <button id="btnLogout" class="btn secondary">
+            Logout
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById("btnTimesheets")
+    .onclick = showTimesheets;
+
+  document.getElementById("btnInvoices")
+    .onclick = showInvoices;
+
+  document.getElementById("btnCosts")
+    .onclick = showCosts;
+
+  document.getElementById("btnExport")
+    .onclick = showExport;
 
   document.getElementById("btnLogout")
     .onclick = logout;
@@ -1044,5 +1103,55 @@ export {
   renderDashboard,
   renderCheckinStart
 };
+function showTimesheets() {
 
+  openModal({
+    title: "Stundennachweise",
+    content: `
+      <div class="info-card blue">
+        Stundenübersicht folgt im nächsten Schritt.
+      </div>
+    `
+  });
+
+}
+
+function showInvoices() {
+
+  openModal({
+    title: "Abrechnung",
+    content: `
+      <div class="info-card orange">
+        Kundenwünsche und Zusatzleistungen.
+      </div>
+    `
+  });
+
+}
+
+function showCosts() {
+
+  openModal({
+    title: "Materialkosten",
+    content: `
+      <div class="info-card yellow">
+        Materialverbrauch und Kosten.
+      </div>
+    `
+  });
+
+}
+
+function showExport() {
+
+  openModal({
+    title: "Export",
+    content: `
+      <div class="info-card green">
+        DATEV-Export folgt.
+      </div>
+    `
+  });
+
+}
 boot();
