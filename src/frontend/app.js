@@ -108,11 +108,16 @@ async function loadAppData() {
  * ROUTER
  ***********************/
 function route() {
-  const user = getUser();
+  const user = appState.currentUser;
 
-  if (!user) return renderLogin();
+  if (!user || !user.Rolle) {
+    renderLogin?.();
+    return;
+  }
 
-  switch (user.Rolle) {
+  const role = user.Rolle;
+
+  switch (role) {
     case "Admin":
       return renderAdminDashboard();
 
@@ -122,11 +127,15 @@ function route() {
     case "Buchhaltung":
       return renderAccountingDashboard();
 
+    case "Mitarbeiter":
+      return renderEmployeeDashboard();
+
     case "Kunde":
       return renderCustomerDashboard();
 
     default:
-      return renderEmployeeDashboard();
+      console.warn("Unknown role:", role);
+      renderLogin?.();
   }
 }
 
