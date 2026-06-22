@@ -1,79 +1,164 @@
 /***********************
- * SAFE HELPERS
+ * CONFIG
  ***********************/
-function safeBind(id, fn) {
-  const el = document.getElementById(id);
-  if (el && typeof fn === "function") {
-    el.onclick = fn;
-  }
-}
+const API_BASE = "https://DEIN-SERVER-URL.com";
 
+/***********************
+ * GLOBAL STATE
+ ***********************/
+const appState = {
+  currentUser: null,
+  currentObject: null,
+  data: {}
+};
+
+/***********************
+ * SAFE DOM
+ ***********************/
 function render(html) {
   const app = document.getElementById("app");
   if (!app) return;
   app.innerHTML = html;
 }
 
-/***********************
- * AUTH FLOW FIX
- ***********************/
-function afterLogin(user) {
-  appState.currentUser = user;
-  renderRoleDashboard();
+function safeBind(id, fn) {
+  const el = document.getElementById(id);
+  if (el && typeof fn === "function") el.onclick = fn;
 }
 
 /***********************
- * LOGOUT FIX (KRITISCH)
+ * USER
  ***********************/
+function normalizeUser(user) {
+  if (!user) return null;
+
+  return {
+    User_ID: user.User_ID ?? null,
+    Name: user.Name ?? "",
+    Rolle: user.Rolle ?? "Mitarbeiter",
+    Branche: user.Branche ?? "facility",
+    Objekt_ID: user.Objekt_ID ?? null
+  };
+}
+
+function getUser() {
+  return appState.currentUser;
+}
+
+function setCurrentUser(user) {
+  appState.currentUser = normalizeUser(user);
+  localStorage.setItem("facilityUser", JSON.stringify(appState.currentUser));
+  route();
+}
+
 function logout() {
-  try {
-    appState.currentUser = null;
-    appState.currentObject = null;
-
-    localStorage.removeItem("facilityUser");
-
-    renderLogin();
-  } catch (e) {
-    console.error("Logout error:", e);
-    renderLogin();
-  }
+  appState.currentUser = null;
+  appState.currentObject = null;
+  localStorage.removeItem("facilityUser");
+  renderLogin();
 }
 
 window.logout = logout;
 
 /***********************
- * ROLE ROUTER (KRITISCH)
+ * GOOGLE SHEETS API LAYER
  ***********************/
-function renderRoleDashboard() {
-  const role = appState?.currentUser?.Rolle;
-
-  if (!role) {
-    renderLogin();
-    return;
+async function fetchSheet(name) {
+  try {
+    const res = await fetch(`${API_BASE}/api/sheet/${name}`);
+    if (!res.ok) throw new Error("Fetch failed");
+    return await res.json();
+  } catch (e) {
+    console.error("Sheet error:", name, e);
+    return [];
   }
+}
 
-  switch (role) {
-    case "Objektleiter":
-      renderManagerDashboard();
-      break;
+async function appendSheet(name, row) {
+  try {
+    await fetch(`${API_BASE}/api/sheet/${name}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ row })
+    });
+  } catch (e) {
+    console.error("Append error:", e);
+  }
+}
 
+function getData(key) {
+  return appState.data[key] || [];
+}
+
+async function loadAppData() {
+  appState.data.users = await fetchSheet("users");
+  appState.data.objects = await fetchSheet("objects");
+  appState.data.rooms = await fetchSheet("rooms");
+  appState.data.tasks = await fetchSheet("tasks");
+  appState.data.materials = await fetchSheet("materials");
+  appState.data.shifts = await fetchSheet("shifts");
+  appState.data.notifications = await fetchSheet("notifications");
+  appState.data.customerRequests = await fetchSheet("customerRequests");
+  appState.data.tickets = await fetchSheet("tickets");
+
+  return true;
+}
+
+/***********************
+ * ROUTER
+ ***********************/
+function route() {
+  const user = getUser();
+
+  if (!user) return renderLogin();
+
+  switch (user.Rolle) {
     case "Admin":
-      renderAdminDashboard();
-      break;
+      return renderAdminDashboard();
+
+    case "Objektleiter":
+      return renderManagerDashboard();
 
     case "Buchhaltung":
-      renderAccountingDashboard();
-      break;
+      return renderAccountingDashboard();
+
+    case "Kunde":
+      return renderCustomerDashboard();
 
     default:
-      renderEmployeeDashboard();
-      break;
+      return renderEmployeeDashboard();
   }
 }
 
 /***********************
- * MANAGER DASHBOARD
+ * BOOT
  ***********************/
+async function boot() {
+  bindModalEvents?.();
+  bindQrEvents?.();
+
+  await loadAppData();
+
+  const saved = localStorage.getItem("facilityUser");
+
+  if (saved) {
+    try {
+      appState.currentUser = normalizeUser(JSON.parse(saved));
+    } catch (e) {
+      localStorage.removeItem("facilityUser");
+    }
+  }
+
+  route();
+}
+
+boot();
+
+/***********************
+ * DASHBOARDS
+ ***********************/
+
+/* MANAGER */
 function renderManagerDashboard() {
   render(`
     <div class="app-shell">
@@ -98,9 +183,7 @@ function renderManagerDashboard() {
   safeBind("btnLogout", logout);
 }
 
-/***********************
- * ADMIN DASHBOARD
- ***********************/
+/* ADMIN */
 function renderAdminDashboard() {
   render(`
     <div class="app-shell">
@@ -119,9 +202,7 @@ function renderAdminDashboard() {
   safeBind("btnLogout", logout);
 }
 
-/***********************
- * ACCOUNTING DASHBOARD
- ***********************/
+/* BUCHHALTUNG */
 function renderAccountingDashboard() {
   render(`
     <div class="app-shell">
@@ -146,17 +227,15 @@ function renderAccountingDashboard() {
   safeBind("btnLogout", logout);
 }
 
-/***********************
- * EMPLOYEE DASHBOARD
- ***********************/
+/* MITARBEITER */
 function renderEmployeeDashboard() {
   if (!appState.currentObject) {
-    showToast("Bitte zuerst am Objekt einchecken", "ERROR");
+    showToast("Bitte Objekt auswählen", "ERROR");
     renderCheckinStart();
     return;
   }
 
-  const user = appState.currentUser;
+  const user = getUser();
 
   render(`
     <div class="app-shell">
@@ -166,74 +245,71 @@ function renderEmployeeDashboard() {
         <div class="role-badge">${user?.Rolle || "-"}</div>
       </div>
 
-      <div class="dashboard">
-
-        <div class="section-card">
-          <div class="button-stack">
-            <button id="btnStartShift" class="btn green">Schicht starten</button>
-            <button id="btnMyShifts" class="btn green">Meine Schichten</button>
-            <button id="btnMailbox" class="btn green">Postfach</button>
-            <button id="btnSick" class="btn green">Krankmeldung</button>
-            <button id="btnVacation" class="btn green">Urlaub</button>
-            <button id="btnMaterial" class="btn green">Material melden</button>
-            <button id="btnHelp" class="btn secondary">Hilfe</button>
-          </div>
+      <div class="section-card">
+        <div class="button-stack">
+          <button id="btnStartShift" class="btn green">Schicht starten</button>
+          <button id="btnMyShifts" class="btn green">Meine Schichten</button>
+          <button id="btnMailbox" class="btn green">Postfach</button>
+          <button id="btnSick" class="btn green">Krankmeldung</button>
+          <button id="btnVacation" class="btn green">Urlaub</button>
+          <button id="btnMaterial" class="btn green">Material melden</button>
+          <button id="btnHelp" class="btn secondary">Hilfe</button>
         </div>
+      </div>
 
-        <div class="section-card">
-          <div class="button-stack">
-            <button id="btnObjectInfo" class="btn blue">Objektinfo</button>
-            <button id="btnRooms" class="btn blue">Räume</button>
-            <button id="btnCleaningPlan" class="btn blue">Putzplan</button>
-            <button id="btnDocuments" class="btn blue">Dokumente</button>
-            <button id="btnFloorPlan" class="btn blue">Grundriss</button>
-            <button id="btnWaste" class="btn blue">Müllplan</button>
-            <button id="btnKeys" class="btn blue">Schlüssel</button>
-            <button id="btnDanger" class="btn blue">Gefahren</button>
-          </div>
+      <div class="section-card">
+        <div class="button-stack">
+          <button id="btnObjectInfo" class="btn blue">Objektinfo</button>
+          <button id="btnRooms" class="btn blue">Räume</button>
+          <button id="btnTickets" class="btn yellow">Tickets</button>
         </div>
+      </div>
 
-        <div class="section-card">
-          <div class="button-stack">
-            <button id="btnTickets" class="btn yellow">Tickets</button>
-            <button id="btnCustomerRequests" class="btn yellow">Kundenwünsche</button>
-            <button id="btnNotes" class="btn yellow">Notiz</button>
-          </div>
+      <div class="section-card">
+        <div class="button-stack">
+          <button id="btnReplacement" class="btn orange">Vertretungen</button>
+          <button id="btnWarnings" class="btn orange">Warnungen</button>
+          <button id="btnAnalytics" class="btn orange">Analysen</button>
         </div>
+      </div>
 
-        <div class="section-card">
-          <div class="button-stack">
-            <button id="btnReplacement" class="btn orange">Vertretungen</button>
-            <button id="btnWarnings" class="btn orange">Warnungen</button>
-            <button id="btnAnalytics" class="btn orange">Analysen</button>
-          </div>
+      <div class="section-card">
+        <div class="button-stack">
+          <button id="btnAdmin" class="btn red">Admin</button>
+          <button id="btnLogout" class="btn secondary">Logout</button>
         </div>
-
-        <div class="section-card">
-          <div class="button-stack">
-            <button id="btnAdmin" class="btn red">Admin</button>
-            <button id="btnLogout" class="btn secondary">Logout</button>
-          </div>
-        </div>
-
       </div>
     </div>
   `);
 
-  bindDashboardEvents();
+  bindEmployeeEvents();
+}
+
+/* KUNDE */
+function renderCustomerDashboard() {
+  render(`
+    <div class="app-shell">
+      <div class="header-card"><h1>Kundenportal</h1></div>
+
+      <div class="section-card">
+        <div class="button-stack">
+          <button id="btnRequests" class="btn purple">Anfragen</button>
+          <button id="btnTickets" class="btn yellow">Tickets</button>
+          <button id="btnLogout" class="btn secondary">Logout</button>
+        </div>
+      </div>
+    </div>
+  `);
+
+  safeBind("btnRequests", showCustomerRequests);
+  safeBind("btnTickets", showTickets);
+  safeBind("btnLogout", logout);
 }
 
 /***********************
- * SAFE BIND EVENTS
+ * EVENTS EMPLOYEE
  ***********************/
-function safeBind(id, fn) {
-  const el = document.getElementById(id);
-  if (el && typeof fn === "function") {
-    el.onclick = fn;
-  }
-}
-
-function bindDashboardEvents() {
+function bindEmployeeEvents() {
   safeBind("btnStartShift", openQrScanner);
   safeBind("btnMyShifts", showMyShifts);
   safeBind("btnMailbox", showMailbox);
@@ -244,16 +320,7 @@ function bindDashboardEvents() {
 
   safeBind("btnObjectInfo", showObjectInfo);
   safeBind("btnRooms", showRooms);
-  safeBind("btnCleaningPlan", showCleaningPlan);
-  safeBind("btnDocuments", showDocuments);
-  safeBind("btnFloorPlan", showFloorPlan);
-  safeBind("btnWaste", showWastePlan);
-  safeBind("btnKeys", showKeys);
-  safeBind("btnDanger", showDanger);
-
   safeBind("btnTickets", showTickets);
-  safeBind("btnCustomerRequests", showCustomerRequests);
-  safeBind("btnNotes", showTicketForm);
 
   safeBind("btnReplacement", showReplacements);
   safeBind("btnWarnings", showWarnings);
@@ -262,45 +329,5 @@ function bindDashboardEvents() {
   safeBind("btnAdmin", showAdmin);
   safeBind("btnLogout", logout);
 
-  bindQrEvents();
+  bindQrEvents?.();
 }
-
-/***********************
- * BOOT
- ***********************/
-async function boot() {
-  bindModalEvents();
-  bindQrEvents();
-
-  const loaded = await loadAppData();
-
-  if (!loaded) {
-    render(`<div class="app-shell"><div class="section-card">Daten konnten nicht geladen werden.</div></div>`);
-    return;
-  }
-
-  appState.cachedUsers = getData("users");
-  appState.cachedObjects = getData("objects");
-  appState.cachedRooms = getData("rooms");
-  appState.cachedTasks = getData("tasks");
-  appState.cachedMaterials = getData("materials");
-  appState.cachedShifts = getData("shifts");
-  appState.notifications = getData("notifications");
-  appState.customerRequests = getData("customerRequests");
-
-  localStorage.removeItem("facilityUser");
-
-  renderLogin();
-}
-
-boot();
-
-/***********************
- * EXPORTS
- ***********************/
-const renderDashboard = renderRoleDashboard;
-
-export {
-  renderDashboard,
-  renderCheckinStart
-};
