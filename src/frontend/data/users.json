@@ -79,3 +79,11 @@
     "Aktiv": "JA"
   }
 ]
+{
+  "User_ID":"U005",
+  "Name":"Buchhaltung",
+  "Email":"buchhaltung@test.de",
+  "Passwort":"Test123!",
+  "Rolle":"BUCHHALTUNG",
+  "Aktiv":"JA"
+}
