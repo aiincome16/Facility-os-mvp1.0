@@ -1,3 +1,12 @@
+window.onerror = function (msg, src, line, col, err) {
+  document.getElementById("app").innerHTML = `
+    <div style="padding:20px;font-family:Arial">
+      <h2>App Crash</h2>
+      <pre>${msg}</pre>
+      <small>${line}:${col}</small>
+    </div>
+  `;
+};
 /***********************
  * CONFIG
  ***********************/
