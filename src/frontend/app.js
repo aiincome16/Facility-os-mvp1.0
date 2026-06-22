@@ -134,26 +134,49 @@ function route() {
  * BOOT
  ***********************/
 async function boot() {
-  bindModalEvents?.();
-  bindQrEvents?.();
-
-  await loadAppData();
-
-  const saved = localStorage.getItem("facilityUser");
-
-  if (saved) {
-    try {
-      appState.currentUser = normalizeUser(JSON.parse(saved));
-    } catch (e) {
-      localStorage.removeItem("facilityUser");
+  try {
+    if (!document.getElementById("app")) {
+      console.error("Missing #app container");
+      return;
     }
+
+    bindModalEvents?.();
+    bindQrEvents?.();
+
+    await loadAppData();
+
+    const saved = localStorage.getItem("facilityUser");
+
+    if (saved) {
+      try {
+        appState.currentUser = normalizeUser(JSON.parse(saved));
+      } catch (e) {
+        localStorage.removeItem("facilityUser");
+        appState.currentUser = null;
+      }
+    }
+
+    if (!appState.currentUser) {
+      if (typeof renderLogin !== "function") {
+        document.getElementById("app").innerHTML =
+          "<div style='padding:20px'>renderLogin() fehlt</div>";
+        return;
+      }
+      renderLogin();
+      return;
+    }
+
+    route();
+
+  } catch (e) {
+    document.getElementById("app").innerHTML = `
+      <div style="padding:20px;font-family:Arial">
+        <h2>Boot Error</h2>
+        <pre>${e.message}</pre>
+      </div>
+    `;
   }
-
-  route();
 }
-
-boot();
-
 /***********************
  * DASHBOARDS
  ***********************/
