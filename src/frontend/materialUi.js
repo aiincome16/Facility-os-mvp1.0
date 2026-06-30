@@ -144,26 +144,3 @@ export function bindMaterialEvents() {
   }
 
 }
-export function bindMaterialEvents() {
-
-  const btnMaterial =
-    document.getElementById("btnMaterial");
-
-  if (btnMaterial) {
-    btnMaterial.addEventListener(
-      "click",
-      showMaterialPhotoDialog
-    );
-  }
-
-  const btnOrders =
-    document.getElementById("btnOrders");
-
-  if (btnOrders) {
-    btnOrders.addEventListener(
-      "click",
-      showMaterialReports
-    );
-  }
-
-}
