@@ -175,3 +175,103 @@ export function logout() {
 }
 
 window.logout = logout;
+/***********************
+ * APP BOOT
+ ***********************/
+export async function boot() {
+
+  try {
+
+    const app =
+      document.getElementById("app");
+
+    if (!app) {
+
+      console.error(
+        "#app Container fehlt"
+      );
+
+      return;
+
+    }
+
+    console.log(
+      `${APP_NAME} ${VERSION} startet...`
+    );
+
+    bindModalEvents();
+
+    bindQrEvents();
+
+    const loaded =
+      await loadAppData();
+
+    if (!loaded) {
+
+      showToast(
+        "Daten konnten nicht geladen werden",
+        "ERROR"
+      );
+
+      return;
+
+    }
+
+    const savedUser =
+      localStorage.getItem(
+        "facilityUser"
+      );
+
+    if (savedUser) {
+
+      try {
+
+        appState.currentUser =
+          normalizeUser(
+            JSON.parse(savedUser)
+          );
+
+      } catch (error) {
+
+        console.error(error);
+
+        localStorage.removeItem(
+          "facilityUser"
+        );
+
+      }
+
+    }
+
+    if (!appState.currentUser) {
+
+      renderLogin();
+
+      return;
+
+    }
+
+    route();
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    render(`
+      <div style="padding:20px">
+          <h2>Boot Error</h2>
+
+          <pre>${error.message}</pre>
+      </div>
+    `);
+
+  }
+
+}
+
+window.addEventListener(
+  "DOMContentLoaded",
+  boot
+);
