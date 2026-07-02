@@ -1,35 +1,66 @@
 import { appState } from "./appState.js";
 import { showToast } from "./toastUi.js";
+import { openQrScanner } from "./qrUi.js";
 
 export function renderObjectSelection() {
 
+  const user = appState.currentUser;
+
+  if (!user) {
+    showToast("Kein Benutzer angemeldet", "ERROR");
+    return;
+  }
+
+  // Vorläufig alle Objekte
+  // Später nur freigegebene Objekte laden
   const objects = appState.data?.objects || [];
 
   document.getElementById("app").innerHTML = `
 
 <div class="app-shell">
 
-  <div class="header-card">
-      <h1>Objekt auswählen</h1>
-  </div>
+    <div class="header-card">
+        <h1>Meine Objekte</h1>
 
-  <div class="section-card">
+        <div>
+            Bitte Objekt auswählen
+        </div>
+    </div>
 
-      <div id="objectList"></div>
+    <div class="section-card">
 
-  </div>
+        <div
+        id="objectList"
+        class="button-stack">
+
+        </div>
+
+    </div>
+
+    <div class="section-card">
+
+        <button
+        id="btnBackDashboard"
+        class="btn secondary">
+
+        Zurück
+
+        </button>
+
+    </div>
 
 </div>
 
 `;
 
-  const list = document.getElementById("objectList");
+  const list =
+    document.getElementById("objectList");
 
   if (!objects.length) {
 
     list.innerHTML = `
       <div class="info-card">
-        Keine Objekte gefunden.
+        Keine Objekte vorhanden.
       </div>
     `;
 
@@ -38,21 +69,31 @@ export function renderObjectSelection() {
 
   objects.forEach(object => {
 
-    const button = document.createElement("button");
+    const btn =
+      document.createElement("button");
 
-    button.className = "btn blue";
+    btn.className = "btn blue";
 
-    button.style.marginBottom = "10px";
+    btn.innerHTML =
+      object.Name ||
+      object.Objekt_Name ||
+      object.Objekt_ID;
 
-    button.innerHTML = `
-      ${object.Name || object.Objekt_Name || "Objekt"}
-    `;
+    btn.addEventListener(
+      "click",
+      () => selectObject(object)
+    );
 
-    button.onclick = () => selectObject(object);
-
-    list.appendChild(button);
+    list.appendChild(btn);
 
   });
+
+  document
+    .getElementById("btnBackDashboard")
+    ?.addEventListener(
+      "click",
+      backToDashboard
+    );
 
 }
 
@@ -69,6 +110,12 @@ function selectObject(object) {
     "Objekt ausgewählt",
     "SUCCESS"
   );
+
+  openQrScanner();
+
+}
+
+function backToDashboard() {
 
   if (typeof renderEmployeeDashboard === "function") {
     renderEmployeeDashboard();
