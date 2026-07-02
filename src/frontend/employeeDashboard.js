@@ -49,10 +49,12 @@ Zur Schicht
 </button>
 `
                 : `
-<button id="btnStartShift"
-class="btn green">
-
-Schicht starten
+document
+  .getElementById("btnStartShift")
+  ?.addEventListener(
+    "click",
+    renderObjectSelection
+  );
 
 </button>
 `
