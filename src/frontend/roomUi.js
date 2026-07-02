@@ -1,127 +1,322 @@
-import { appState, setCurrentRoom } from "./appState.js";
-import { openModal } from "./modalUi.js";
+import { appState } from "./appState.js";
+import { showToast } from "./toastUi.js";
 
 export function showRooms() {
-  const rooms = appState.cachedRooms || [];
 
-  if (!rooms.length) {
-    openModal({
-      title: "Räume",
-      content: `<div class="info-card">Keine Räume vorhanden.</div>`
-    });
+  const object = appState.currentObject;
+
+  if (!object) {
+    showToast("Kein Objekt ausgewählt", "ERROR");
     return;
   }
 
-  openModal({
-    title: "Räume",
-    content: `
-      <div class="room-list">
-        ${rooms.map(formatRoomButton).join("")}
-      </div>
-    `
-  });
+  const rooms = (appState.data?.rooms || []).filter(room =>
+    room.Objekt_ID === object.Objekt_ID
+  );
 
-  rooms.forEach((room) => {
-    document
-      .getElementById(`room-${room.Raum_ID}`)
-      ?.addEventListener("click", () => {
-        setCurrentRoom(room);
-        showRoomDetails(room);
+  document.getElementById("app").innerHTML = `
+
+<div class="app-shell">
+
+    <div class="header-card">
+        <h1>Räume</h1>
+
+        <div>
+            ${object.Name || ""}
+        </div>
+    </div>
+
+    <div class="section-card">
+
+        <input
+            id="roomSearch"
+            class="input"
+            placeholder="Raum suchen...">
+
+    </div>
+
+    <div
+        id="roomList"
+        class="section-card">
+
+    </div>
+
+    <div class="section-card">
+
+        <button
+            id="btnBackDashboard"
+            class="btn secondary">
+
+            Zurück
+
+        </button>
+
+    </div>
+
+</div>
+
+`;
+
+  renderRoomList(rooms);
+
+  document
+    .getElementById("roomSearch")
+    ?.addEventListener("input", (e) => {
+
+      const search =
+        e.target.value.toLowerCase();
+
+      const filtered = rooms.filter(room => {
+
+        return (
+          (room.Raum_Name || "")
+            .toLowerCase()
+            .includes(search)
+
+          ||
+
+          (room.Raum_Nummer || "")
+            .toLowerCase()
+            .includes(search)
+        );
+
       });
-  });
+
+      renderRoomList(filtered);
+
+    });
+
+  document
+    .getElementById("btnBackDashboard")
+    ?.addEventListener(
+      "click",
+      () => {
+
+        if (typeof renderEmployeeDashboard === "function") {
+          renderEmployeeDashboard();
+        }
+
+      }
+    );
+
 }
 
-function formatRoomButton(room) {
-  return `
-    <button id="room-${room.Raum_ID}" class="room-card">
-      ${room.Raumname || room.Name || "Raum"}
-    </button>
-  `;
+function renderRoomList(rooms) {
+
+  const list =
+    document.getElementById("roomList");
+
+  if (!list) return;
+
+  if (!rooms.length) {
+
+    list.innerHTML = `
+      <div class="info-card">
+        Keine Räume gefunden.
+      </div>
+    `;
+
+    return;
+  }
+
+  list.innerHTML = "";
+
+  rooms.forEach(room => {
+
+    const button =
+      document.createElement("button");
+
+    button.className =
+      "info-card blue";
+
+    button.innerHTML = `
+
+<div class="card-title">
+
+${room.Raum_Nummer || ""}
+
+</div>
+
+${room.Raum_Name || ""}
+
+<br><br>
+
+Status:
+${room.Status || "OFFEN"}
+
+`;
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        appState.currentRoom = room;
+
+        showRoomDetails(room);
+
+      }
+    );
+
+    list.appendChild(button);
+
+  });
+
 }
 
 export function showRoomDetails(room) {
-  const tasks = (appState.cachedTasks || []).filter(
-    (task) => task.Raum_ID === room.Raum_ID
-  );
 
-  openModal({
-    title: room.Raumname || room.Name || "Raum",
-    content: `
-      <div class="info-card blue">
-        <div class="card-title">Raumdaten</div>
-        Intervall: ${room.Intervall || "-"}<br>
-        Sollzeit: ${room.Sollzeit || "-"} Minuten<br>
-        Priorität: ${room.Prioritaet || "-"}
-      </div>
+  document.getElementById("app").innerHTML = `
 
-      ${
-        tasks.length
-          ? tasks.map(formatTaskCard).join("")
-          : `<div class="info-card">Keine Aufgaben vorhanden.</div>`
-      }
-    `
-  });
-}
+<div class="app-shell">
 
-function formatTaskCard(task) {
-  return `
-    <div class="info-card green">
-      <div class="card-title">${task.Bereich || task.Aufgabe || "Aufgabe"}</div>
-      Aufgabe: ${task.Aufgabe || "-"}<br><br>
-      Material: ${task.Material || "-"}<br><br>
-      Anleitung: ${task.Anleitung || "-"}<br><br>
-      Warnung: ${task.Warnung || "-"}<br><br>
-      Kontrolle: ${task.Kontrolle || "-"}
+    <div class="header-card">
+
+        <h1>
+
+${room.Raum_Nummer || ""}
+
+</h1>
+
+<div>
+
+${room.Raum_Name || ""}
+
+</div>
+
     </div>
-  `;
-}
 
-export function showCleaningPlan() {
-  const rooms = appState.cachedRooms || [];
+    <div class="section-card">
 
-  openModal({
-    title: "Putzplan",
-    content: rooms.length
-      ? rooms.map((room) => `
-          <div class="info-card blue">
-            <div class="card-title">${room.Raumname || room.Name || "Raum"}</div>
-            Intervall: ${room.Intervall || "-"}<br>
-            Sollzeit: ${room.Sollzeit || "-"} Minuten
-          </div>
-        `).join("")
-      : `<div class="info-card">Kein Putzplan vorhanden.</div>`
-  });
-}
+        <div class="button-stack">
 
-export function bindRoomEvents() {
+            <button id="btnTasks" class="btn green">
+
+Aufgaben
+
+</button>
+
+            <button id="btnTickets" class="btn yellow">
+
+Tickets
+
+</button>
+
+            <button id="btnCustomerRequests" class="btn orange">
+
+Kundenwünsche
+
+</button>
+
+            <button id="btnComplaints" class="btn red">
+
+Beschwerden
+
+</button>
+
+            <button id="btnDocuments" class="btn blue">
+
+Dokumente
+
+</button>
+
+            <button id="btnPhotos" class="btn blue">
+
+Fotos
+
+</button>
+
+            <button id="btnVideos" class="btn blue">
+
+Videos
+
+</button>
+
+            <button id="btnHistory" class="btn secondary">
+
+Historie
+
+</button>
+
+            <button id="btnBackRooms" class="btn secondary">
+
+Zurück
+
+</button>
+
+        </div>
+
+    </div>
+
+</div>
+
+`;
+
   document
-    .getElementById("btnRooms")
+    .getElementById("btnTasks")
+    ?.addEventListener("click", () => {
+
+      showToast("Raumaufgaben folgen", "INFO");
+
+    });
+
+  document
+    .getElementById("btnTickets")
+    ?.addEventListener("click", () => {
+
+      showToast("Raumtickets folgen", "INFO");
+
+    });
+
+  document
+    .getElementById("btnCustomerRequests")
+    ?.addEventListener("click", () => {
+
+      showToast("Kundenwünsche folgen", "INFO");
+
+    });
+
+  document
+    .getElementById("btnComplaints")
+    ?.addEventListener("click", () => {
+
+      showToast("Beschwerden folgen", "INFO");
+
+    });
+
+  document
+    .getElementById("btnDocuments")
+    ?.addEventListener("click", () => {
+
+      showToast("Dokumente folgen", "INFO");
+
+    });
+
+  document
+    .getElementById("btnPhotos")
+    ?.addEventListener("click", () => {
+
+      showToast("Fotos folgen", "INFO");
+
+    });
+
+  document
+    .getElementById("btnVideos")
+    ?.addEventListener("click", () => {
+
+      showToast("Videos folgen", "INFO");
+
+    });
+
+  document
+    .getElementById("btnHistory")
+    ?.addEventListener("click", () => {
+
+      showToast("Historie folgt", "INFO");
+
+    });
+
+  document
+    .getElementById("btnBackRooms")
     ?.addEventListener("click", showRooms);
-
-  document
-    .getElementById("btnCleaningPlan")
-    ?.addEventListener("click", showCleaningPlan);
-}
-export function bindRoomEvents() {
-
-  const btnRooms =
-    document.getElementById("btnRooms");
-
-  if (btnRooms) {
-    btnRooms.addEventListener(
-      "click",
-      showRooms
-    );
-  }
-
-  const btnCleaningPlan =
-    document.getElementById("btnCleaningPlan");
-
-  if (btnCleaningPlan) {
-    btnCleaningPlan.addEventListener(
-      "click",
-      showCleaningPlan
-    );
-  }
 
 }
